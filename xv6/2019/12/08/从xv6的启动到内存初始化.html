@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="逆流" /></head>
+<style>@import url(/public/css/syntax/monokai.css);</style>
+  <title>逆流</title>
+  <!-- <link href="/public/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link href="/public/css/style.css" rel="stylesheet">
+  <body>
+  	<div class="container"> 
+		<div class="sidebar">
+			<div class="sidebar-item sidebar-header">
+	<div class='sidebar-brand'>
+		<a href="/about/">逆流</a>
+	</div>
+	<p class="lead">积土是功，成山是德。 </p></div>
+
+<div class="sidebar-item sidebar-nav">
+	<ul class="nav">
+      <li class="nav-title">博客</li>
+	  <li>
+	  	<a class="nav-item" href="/">文章</a>
+	  </li>
+	  
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/about/">
+	            	关于我
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	      
+	    
+	  
+	    
+	  
+	    
+	  
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-nav">
+  	<ul class="nav">
+			<li class="nav-title">分类</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2018">
+				<span class="name">year2018</span>
+				<span class="badge">3</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#ACPI">
+				<span class="name">ACPI</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#COD">
+				<span class="name">COD</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2019">
+				<span class="name">year2019</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#xv6">
+				<span class="name">xv6</span>
+				<span class="badge">6</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#programmer">
+				<span class="name">programmer</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#network">
+				<span class="name">network</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#os">
+				<span class="name">os</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	  </nav>
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-footer">
+	<p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a></p>
+	<p>Themed by ejjoo</p>
+</div>
+
+		</div>
+		<div class="content">
+			<article class="post">
+	<header class="post-header">
+		<div class="post-title"> 
+			从xv6的启动到内存初始化
+		</div>
+		<time class="post-date dt-published" datetime="2019-12-08T00:00:00+08:00" itemprop="datePublished">2019/12/08
+		</time>		
+	</header>
+
+	<div class="post-content">
+		<p>这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</p>
+
+<h4 id="一-运行前的准备">一、 运行前的准备</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/mit-pdos/xv6-riscv.git	# 下载xv6源码
+sudo apt install gcc-8-riscv64-linux-gnu	# 安装编译工具
+# 需自行编译qemu,编译目标为riscv64-softmmu
+cd xv6-riscv
+vim Makefile	# 把第51行的"CC = ..."里的"gcc"改为"gcc-8"
+</code></pre></div></div>
+
+<h4 id="二运行xv6">二、运行xv6</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd xv6-riscv
+make qemu 
+</code></pre></div></div>
+
+<p>编译主要是生成kernel和fs.img两个文件。kernel是从kernel/目录下的文件编译出来的，它是xv6的内核。fs.img是一个镜像文件，包含了一些用户态的程序，这些程序是从user/目录编译出来的。这些用户态的程序，通过mkfs\目录下的mkfs.c生成的程序mkfs，放到fs.img里。</p>
+
+<h4 id="三内核的入口">三、内核的入口</h4>
+
+<p>kernel/kernel.ld是把内核链接起来的配置文件，在这个文件里指明了内核的入口是<code class="highlighter-rouge">_entry</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ENTRY( _entry )
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">_entry</code>在文件kernel/entry.S，当前运行在机器态，这段代码的作用是为C代码的运行做准备，一旦做好准备就跳转到C代码的start函数开始执行。具体来看，它就是为每个核准备了4K大小的栈空间，这些栈的空间都在是kernel/start.c函数里分配的。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__attribute__ ((aligned (16))) char stack0[4096 * NCPU];
+</code></pre></div></div>
+
+<h4 id="四跳转到c">四、跳转到C</h4>
+
+<p><code class="highlighter-rouge">start</code>函数在kernel/start.c，它的作用是为进入S特权级做好准备，一旦准备完成就进入S态，从<code class="highlighter-rouge">main</code>函数开始执行。</p>
+
+<ul>
+  <li>设置mstatus寄存器告诉它我们是从S态进入的，设置mepc寄存器告诉它我们在S态的进入点是main，这样在执行mret指令后处理器就会“返回”到S态，从main函数开始执行。</li>
+  <li>设置satp寄存器为0是告诉处理器在进入S态后不开启分页。</li>
+  <li>设置medeleg和mideleg，告诉它们在S态处理异常和中断。所有的处理都放在S态，这样提升了效率，降低了代码的复杂度。</li>
+  <li>timerinit函数用来设置计时器中断。</li>
+  <li>把当前核的编号放在tp寄存器里，这是为内核函数cpuid准备的。</li>
+  <li>执行mret指令，跳转到S态。</li>
+</ul>
+
+<h4 id="五内核的总控函数main">五、内核的总控函数main</h4>
+
+<p><code class="highlighter-rouge">main</code>函数在kernel/main.c，处理器从这个函数开始进入了S态，这个函数是内核的总控函数，它完成了硬件及内核相关数据结构的初始化，最后以处理机调度的状态一直存在着。main函数之后，用户态的第一个进程开始执行了。</p>
+
+<h4 id="六与外界交互">六、与外界交互</h4>
+
+<p><code class="highlighter-rouge">main</code>函数首先要做的事是与外界交互，这样才能看到内核运行的状况，方便定位问题。实现这个功能的函数是<code class="highlighter-rouge">consoleinit</code>, <code class="highlighter-rouge">printfinit</code>, <code class="highlighter-rouge">printf</code>。</p>
+
+<ul>
+  <li>consoleinit是从硬件的层面初始化输入输出。首先，它初始化了控制台的锁cons.lock，这是为了避免多个核同时使用控制台引发输入输出的混乱。然后，初始化uart。最后，把consoleread和consolewrite连接到系统调用read和write。</li>
+  <li>printfinit函数的作用是初始化printf函数的锁pr.lock，这也是为了避免多个核同时使用printf函数引发输入输出的混乱。</li>
+  <li>printf函数依赖于consputc，consputc依赖于uartputc。可见，对uart的初始化是实现printf函数的基础。</li>
+</ul>
+
+<h4 id="七内存的初始化">七、内存的初始化</h4>
+
+<p>内存的初始化就是建立虚拟内存和物理内存之间的映射关系。实现这个功能的函数是<code class="highlighter-rouge">kinit</code>, <code class="highlighter-rouge">kvminit</code>,<code class="highlighter-rouge">kvminithart</code>。</p>
+
+<ul>
+  <li>kinit把空闲内存加到了一个单向链表freelist里，这样就可以通过链表freelist来管理这些空闲内存了。</li>
+  <li>kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核/用户空间切换的代码空间建立映射。</li>
+  <li>kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。</li>
+</ul>
+
+
+	</div>
+</article>
+
+		</div>
+	</div>
+  </body>
+</html>

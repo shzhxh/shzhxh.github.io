@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-05-30T17:55:56+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">逆流</title><subtitle>积土是功，成山是德。 </subtitle><entry><title type="html">操作系统的启动过程</title><link href="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html" rel="alternate" type="text/html" title="操作系统的启动过程" /><published>2021-05-23T22:02:00+08:00</published><updated>2021-05-23T22:02:00+08:00</updated><id>http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B</id><content type="html" xml:base="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html">&lt;p&gt;操作系统的启动过程，就是修改内存和寄存器的过程。&lt;/p&gt;
+
+&lt;p&gt;它的目的，就是在硬件的整个运行过程中，向应用程序提供使用硬件的服务。&lt;/p&gt;</content><author><name></name></author><category term="os" /><summary type="html">操作系统的启动过程，就是修改内存和寄存器的过程。</summary></entry><entry><title type="html">回顾网络相关的知识</title><link href="http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86.html" rel="alternate" type="text/html" title="回顾网络相关的知识" /><published>2021-05-16T22:02:00+08:00</published><updated>2021-05-16T22:02:00+08:00</updated><id>http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86</id><content type="html" xml:base="http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86.html">&lt;p&gt;SSH协议处于应用层，即安全外壳协议(Secure Shell)。&lt;/p&gt;
+
+&lt;p&gt;传输层的端口号不是进程号，但一台机器上的端口号一定关联着某个进程号。端口号是外部视角的进程，进程号是内部视角的进程。&lt;/p&gt;</content><author><name></name></author><category term="network" /><summary type="html">SSH协议处于应用层，即安全外壳协议(Secure Shell)。</summary></entry><entry><title type="html">XV6的锁</title><link href="http://localhost:4000/xv6/2020/05/05/xv6%E7%9A%84%E9%94%81.html" rel="alternate" type="text/html" title="XV6的锁" /><published>2020-05-05T00:00:00+08:00</published><updated>2020-05-05T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2020/05/05/xv6%E7%9A%84%E9%94%81</id><content type="html" xml:base="http://localhost:4000/xv6/2020/05/05/xv6%E7%9A%84%E9%94%81.html">&lt;h4 id=&quot;简介&quot;&gt;简介&lt;/h4&gt;
+
+&lt;p&gt;用自己的语言描述xv6的锁。锁不是操作系统的某个子系统，感觉它更像一个工具，是给并发加上了镣铐。在请求锁&lt;code class=&quot;highlighter-rouge&quot;&gt;acquire()&lt;/code&gt;和释放锁&lt;code class=&quot;highlighter-rouge&quot;&gt;release()&lt;/code&gt;之间的代码是临界区(critical section)，以前以为临界区是个空间的概念，现在看来临界区也是时间的概念。因为在持有锁的这段时间并没有说不能做什么事情，只是大家都在这个时间段里保护某个数据结构的不变性而已。&lt;/p&gt;
+
+&lt;h4 id=&quot;引子&quot;&gt;引子&lt;/h4&gt;
+
+&lt;p&gt;自旋锁的核心数据结构是&lt;code class=&quot;highlighter-rouge&quot;&gt;struct spinlock&lt;/code&gt;，核心操作是&lt;code class=&quot;highlighter-rouge&quot;&gt;acquire()&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;release()&lt;/code&gt;，它们定义在&lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt;目录下的&lt;code class=&quot;highlighter-rouge&quot;&gt;spinlock.h&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;spinlock.c&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h4 id=&quot;自旋锁&quot;&gt;自旋锁&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;acquire()&lt;/code&gt;用一个&lt;code class=&quot;highlighter-rouge&quot;&gt;while&lt;/code&gt;循环来请求锁，它一直在这个&lt;code class=&quot;highlighter-rouge&quot;&gt;while&lt;/code&gt;上自旋直到获得锁。获得锁的方式是用builtin函数&lt;code class=&quot;highlighter-rouge&quot;&gt;__sync_lock_test_and_set&lt;/code&gt;，这个函数使用原子指令&lt;code class=&quot;highlighter-rouge&quot;&gt;amoswap&lt;/code&gt;使锁的值变为1。&lt;code class=&quot;highlighter-rouge&quot;&gt;release()&lt;/code&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;__sync_lock_release&lt;/code&gt;来释放锁，这个函数最终也使用了&lt;code class=&quot;highlighter-rouge&quot;&gt;amoswap&lt;/code&gt;指令。&lt;/p&gt;
+
+&lt;p&gt;自旋锁是要一直死等的，它的代价挺大的，感觉还是能不用尽量不用的好。必须要用的时候，应使临界区尽量地小。且被保护的数据结构在所有的地方都要加自旋锁，否则就失去了保护的意义。&lt;/p&gt;
+
+&lt;p&gt;当自旋锁之间存在次序的关系时，所有的代码都必须遵循同样的次序来持有和释放锁。&lt;/p&gt;
+
+&lt;p&gt;当在线程里使用锁的时候，如果发生中断，中断代码如请求同样的锁会发生死锁。所以，在请求锁的时候要禁止中断，在释放锁的时候再恢复中断。这就是&lt;code class=&quot;highlighter-rouge&quot;&gt;push_off&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pop_off&lt;/code&gt;做的事。&lt;/p&gt;
+
+&lt;p&gt;编译器有的时候不按代码的次序安排指令，这对于锁来说是有害的，所以需要&lt;code class=&quot;highlighter-rouge&quot;&gt;__sync_synchronize&lt;/code&gt;来建立内存屏障，使load和store指令不要跨屏障使用。&lt;/p&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">简介</summary></entry><entry><title type="html">XV6的自陷管理</title><link href="http://localhost:4000/xv6/2020/04/19/xv6%E7%9A%84%E8%87%AA%E9%99%B7.html" rel="alternate" type="text/html" title="XV6的自陷管理" /><published>2020-04-19T00:00:00+08:00</published><updated>2020-04-19T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2020/04/19/xv6%E7%9A%84%E8%87%AA%E9%99%B7</id><content type="html" xml:base="http://localhost:4000/xv6/2020/04/19/xv6%E7%9A%84%E8%87%AA%E9%99%B7.html">&lt;h4 id=&quot;简介&quot;&gt;简介&lt;/h4&gt;
+
+&lt;p&gt;用自己的语言描述XV6的自陷管理系统。XV6把CPU跳出当前指令流转而执行其它代码的情况叫trap，看到有人把它翻译成&lt;strong&gt;自陷&lt;/strong&gt;，感觉这么翻译还是比较准确的。自陷可分为三种情况：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;系统调用，使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ecall&lt;/code&gt;指令跳出当前代码流。&lt;/li&gt;
+  &lt;li&gt;异常，由于指令非法执行跳出当前代码流。&lt;/li&gt;
+  &lt;li&gt;设备中断，由于设备发出中断信号跳出当前代码流。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;引子&quot;&gt;引子&lt;/h4&gt;
+
+&lt;p&gt;当xv6在启动的过程中，首先在机器模式下调用&lt;code class=&quot;highlighter-rouge&quot;&gt;timerinit&lt;/code&gt;初始化了计时器中断，然后切换到管理员模式下，主控函数&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;调用了两个函数来完成自陷管理系统的初始化。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;trapinit&lt;/code&gt;打个酱油。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;trapinithart&lt;/code&gt;指定内核模式下的自陷处理例程。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;与自陷管理相关的文件有&lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt;目录下&lt;code class=&quot;highlighter-rouge&quot;&gt;start.c&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;trap.c&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;kernelvec.S&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;trampoline.S&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;start.c&lt;/code&gt;处理计时器中断(机器模式下)。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;trap.c&lt;/code&gt;处理管理员模式和用户模式下的自陷。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;kernelvec.S&lt;/code&gt;处理管理员模式下的自陷和机器模式下的计时器中断。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;trampoline.S&lt;/code&gt;用户模式到管理员模式，以及管理员模式返回用户的跳板。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;管理员模式下的自陷&quot;&gt;管理员模式下的自陷&lt;/h4&gt;
+
+&lt;p&gt;管理员模式下只可能发生两种自陷：异常和设备中断。&lt;/p&gt;
+
+&lt;p&gt;当自陷发生，硬件会把&lt;code class=&quot;highlighter-rouge&quot;&gt;stvec&lt;/code&gt;的值保存到&lt;code class=&quot;highlighter-rouge&quot;&gt;pc&lt;/code&gt;，进而执行&lt;code class=&quot;highlighter-rouge&quot;&gt;stvec&lt;/code&gt;所指向的地址。&lt;code class=&quot;highlighter-rouge&quot;&gt;stvec&lt;/code&gt;里保存的是&lt;code class=&quot;highlighter-rouge&quot;&gt;kernelvec&lt;/code&gt;的地址，所以自陷发生后执行&lt;code class=&quot;highlighter-rouge&quot;&gt;kernelvec&lt;/code&gt;。&lt;code class=&quot;highlighter-rouge&quot;&gt;kernelvec&lt;/code&gt;做的事是保存和恢复上下文，其它的工作交给C代码的&lt;code class=&quot;highlighter-rouge&quot;&gt;kerneltrap&lt;/code&gt;来处理。&lt;code class=&quot;highlighter-rouge&quot;&gt;kerneltrap&lt;/code&gt;做的事是排查异常情况，自陷处理工作交给&lt;code class=&quot;highlighter-rouge&quot;&gt;devinitr&lt;/code&gt;来做。&lt;code class=&quot;highlighter-rouge&quot;&gt;scause&lt;/code&gt;最高位为1说明是来自于中断，此时会判断中断的类型分别处理；否则，最高位就是0，说明来自于异常，此时不做任何处理直接返回0。&lt;/p&gt;
+
+&lt;h4 id=&quot;用户模式下的自陷&quot;&gt;用户模式下的自陷&lt;/h4&gt;
+
+&lt;p&gt;用户模式下三种自陷都有可能发生。&lt;/p&gt;
+
+&lt;p&gt;当自陷发生，硬件从用户模式进入到管理员模式，此时&lt;code class=&quot;highlighter-rouge&quot;&gt;stvec&lt;/code&gt;里保存的是&lt;code class=&quot;highlighter-rouge&quot;&gt;uservec&lt;/code&gt;的地址(&lt;strong&gt;不知道什么时候把uservec写入到stvec的？&lt;/strong&gt;)。&lt;code class=&quot;highlighter-rouge&quot;&gt;uservec&lt;/code&gt;做的事是保存上下文，切换到内核栈和内核的页表，最后跳转到&lt;code class=&quot;highlighter-rouge&quot;&gt;usertrap&lt;/code&gt;。&lt;code class=&quot;highlighter-rouge&quot;&gt;usertrap&lt;/code&gt;做的事是依据自陷的类型，分发给不同的函数去处理，如果是系统调用则执行&lt;code class=&quot;highlighter-rouge&quot;&gt;syscall&lt;/code&gt;，如果是外设中断则执行&lt;code class=&quot;highlighter-rouge&quot;&gt;devinitr&lt;/code&gt;，如果是除系统调用外的其它异常则执行&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;，如果没有执行&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;则会调用&lt;code class=&quot;highlighter-rouge&quot;&gt;usertrapret&lt;/code&gt;。&lt;code class=&quot;highlighter-rouge&quot;&gt;usertrapret&lt;/code&gt;为下次用户空间的自陷做准备，最后切换到&lt;code class=&quot;highlighter-rouge&quot;&gt;userret&lt;/code&gt;继续执行。&lt;code class=&quot;highlighter-rouge&quot;&gt;userret&lt;/code&gt;切换到用户页表，恢复上下文，最后通过&lt;code class=&quot;highlighter-rouge&quot;&gt;sret&lt;/code&gt;指令返回到用户模式。&lt;/p&gt;
+
+&lt;h4 id=&quot;计时器中断&quot;&gt;计时器中断&lt;/h4&gt;
+
+&lt;p&gt;运行于机器模式下的&lt;code class=&quot;highlighter-rouge&quot;&gt;timerinit&lt;/code&gt;初始化了计时器中断。由于virtio机器的时钟频率是10MHz，所以&lt;code class=&quot;highlighter-rouge&quot;&gt;interval&lt;/code&gt;设置为1M的意思就是每100ms产生一个计时器中断。&lt;code class=&quot;highlighter-rouge&quot;&gt;scratch[]&lt;/code&gt;区域用来给&lt;code class=&quot;highlighter-rouge&quot;&gt;timervec&lt;/code&gt;提供保存和恢复上下文的空间。&lt;code class=&quot;highlighter-rouge&quot;&gt;timervec&lt;/code&gt;被保存在&lt;code class=&quot;highlighter-rouge&quot;&gt;mtvec&lt;/code&gt;里，它的工作是处理计时器中断。&lt;code class=&quot;highlighter-rouge&quot;&gt;timervec&lt;/code&gt;产生了一个管理员模式下的软件中断，这样就可以通过管理员模式下的自陷处理机制来管理计时器中断了。&lt;/p&gt;
+
+&lt;h4 id=&quot;参考文档&quot;&gt;参考文档&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/mit-pdos/xv6-riscv-book&quot;&gt;xv6-riscv-book Chapter 4&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;riscv-privileged-v1.10&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">简介</summary></entry><entry><title type="html">XV6的内存管理</title><link href="http://localhost:4000/xv6/2020/04/12/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86.html" rel="alternate" type="text/html" title="XV6的内存管理" /><published>2020-04-12T00:00:00+08:00</published><updated>2020-04-12T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2020/04/12/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86</id><content type="html" xml:base="http://localhost:4000/xv6/2020/04/12/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86.html">&lt;h4 id=&quot;简介&quot;&gt;简介&lt;/h4&gt;
+
+&lt;p&gt;用自己的语言描述XV6的内存管理系统。&lt;/p&gt;
+
+&lt;h4 id=&quot;引子&quot;&gt;引子&lt;/h4&gt;
+
+&lt;p&gt;当xv6在启动的过程中，主控函数&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;调用了三个函数来完成内存管理系统的初始化。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;kinit&lt;/code&gt;把空闲的物理内存以页为单位放到一个单向链表&lt;code class=&quot;highlighter-rouge&quot;&gt;kmem.freelist&lt;/code&gt;里，这样就可以通过操作这个链表来管理物理页了。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;kvminit&lt;/code&gt;是给物理页和虚拟页之间建立映射关系，这样就为开启分页做好了准备。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;kvminithart&lt;/code&gt;用于开启分页。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;与内存管理相关的文件有&lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt;目录下&lt;code class=&quot;highlighter-rouge&quot;&gt;kalloc.c&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;vm.c&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;memlayout.h&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;kalloc.c&lt;/code&gt;的作用是进行物理内存管理，它的核心数据结构是&lt;code class=&quot;highlighter-rouge&quot;&gt;kmem.freelist&lt;/code&gt;，它的核心函数是&lt;code class=&quot;highlighter-rouge&quot;&gt;kfree&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;kalloc&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vm.c&lt;/code&gt;的作用是进行虚拟内存的管理，它的核心变量是&lt;code class=&quot;highlighter-rouge&quot;&gt;kernel_pagetable&lt;/code&gt;，它的函数用于管理虚拟内存，即包括在管理员模式下，也包括在用户模式下。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;memlayout.h&lt;/code&gt;的作用是描述物理内存的布局。其内容是一些重要的物理地址的宏定义。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;虚拟内存到物理内存的映射&quot;&gt;虚拟内存到物理内存的映射&lt;/h4&gt;
+
+&lt;p&gt;RISC-V有三种映射方式，Sv32、Sv39、Sv48。它们区别仅在于映射的层级不一样，进而物理地址和虚拟地址的可表示范围不一样。其中Sv32是二级映射，Sv39是三级映射，Sv48是四级映射。&lt;/p&gt;
+
+&lt;p&gt;虚拟地址和物理地址的页内偏移是相等的，所以，它们的大小的设计仅需考虑PTE。&lt;/p&gt;
+
+&lt;p&gt;对于Sv32，每个PTE占用4个字节，所以页表对应了(4K/4B)=1024个PTE，所以每一级VPN需要占用10位，所以它的虚拟地址是10*2+12=32位。由于高22位是PPN，所以物理地址是22+12=34位。&lt;/p&gt;
+
+&lt;p&gt;对于Sv39和Sv48，每个PTE占用8个字节，所以页表对应了(4K/8B)=512个PTE，所以每一级VPN需要占用9位。类似于Sv32的计算方式，可得它们的有效虚拟地址，Sv39是9*3+12=39位，Sv48是9*4+12=48位。它们的PPN都是44位，所以物理地址是44+12=56位。&lt;/p&gt;
+
+&lt;h4 id=&quot;内核空间的映射&quot;&gt;内核空间的映射&lt;/h4&gt;
+
+&lt;p&gt;对于机器virtio来说，物理内存是从0x80000000开始计数的，物理内存前面的部分是MMIO。&lt;/p&gt;
+
+&lt;p&gt;0~0x7FFFFFFF是MMIO，映射在虚拟内存相同的位置。&lt;/p&gt;
+
+&lt;p&gt;0x80000000~0x80000000+128M，映射在虚拟内存相同的位置。&lt;/p&gt;
+
+&lt;p&gt;trampoline页，用于内核空间和用户空间的切换，被映射在虚拟内存的顶部。&lt;/p&gt;
+
+&lt;p&gt;内核栈，被映射在虚拟内存里trampoline页的下面。&lt;/p&gt;
+
+&lt;h4 id=&quot;参考文档&quot;&gt;参考文档&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/mit-pdos/xv6-riscv-book&quot;&gt;xv6-riscv-book Chapter 3&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;riscv-privileged-v1.10&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">简介</summary></entry><entry><title type="html">程序员进阶之路</title><link href="http://localhost:4000/programmer/2020/04/05/%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF.html" rel="alternate" type="text/html" title="程序员进阶之路" /><published>2020-04-05T00:00:00+08:00</published><updated>2020-04-05T00:00:00+08:00</updated><id>http://localhost:4000/programmer/2020/04/05/%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF</id><content type="html" xml:base="http://localhost:4000/programmer/2020/04/05/%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF.html">&lt;h4 id=&quot;大牛&quot;&gt;大牛&lt;/h4&gt;
+
+&lt;p&gt;大牛的特点是推动了社会的进步。他不再局限于自己的专业领域，而是广泛地涉猎世间的各种知识，以自己的专业知识弥补世界的不足。&lt;/p&gt;
+
+&lt;h4 id=&quot;半步大牛&quot;&gt;半步大牛&lt;/h4&gt;
+
+&lt;p&gt;半步大牛的特点是闭环极大的丰富。深入地理解Linux，LLVM，GCC，RISC-V。能设计并实现合理的三种系统：教学操作系统，教学处理器，教学编译器。&lt;/p&gt;
+
+&lt;h4 id=&quot;小牛&quot;&gt;小牛&lt;/h4&gt;
+
+&lt;p&gt;小牛的特点是在他的圈子里成为解决问题的人。小牛的知识已成闭环，所有的新知识都可以从他的闭环里衍生出来，所以他学东西很快，所有的问题都不出他的闭环，所以他总是能解决碰到的问题。&lt;/p&gt;
+
+&lt;h4 id=&quot;半步小牛&quot;&gt;半步小牛&lt;/h4&gt;
+
+&lt;p&gt;半步小牛的特点在知识上形成了闭环。如果知识没有形成闭环，就会最终滑坡回到起点。只有形成闭环的知识才是真正与自己凝聚为一，犹如攀登过程中上到一个平台，不会再降回起点。&lt;/p&gt;
+
+&lt;p&gt;从知识结构上看，能彻底理解如下三个系统的结构和代码：一个教学的操作系统，如XV6；一个教学处理器，如sodor；一个教学的编译器。&lt;/p&gt;</content><author><name></name></author><category term="programmer" /><summary type="html">大牛</summary></entry><entry><title type="html">xv6的系统调用</title><link href="http://localhost:4000/xv6/2019/12/22/xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html" rel="alternate" type="text/html" title="xv6的系统调用" /><published>2019-12-22T00:00:00+08:00</published><updated>2019-12-22T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2019/12/22/xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8</id><content type="html" xml:base="http://localhost:4000/xv6/2019/12/22/xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html">&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user/initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user/init.c。&lt;/p&gt;
+
+&lt;p&gt;user/init.c把文件sh放到内存里执行。文件sh编译自user/sh.c，把用户输入的命令调入内存中执行，它就是xv6的shell。&lt;/p&gt;
+
+&lt;p&gt;系统调用怎么从用户态到的内核态呢？文件user/usys.pl生成user/usys.S，usys.S就是用来完成从用户态到内核态的代码。从代码可见，它是通过ecall产生一个异常来进入内核态，在kernelvec处保存寄存器的上下文，调用kerneltrap，&lt;/p&gt;
+
+&lt;h4 id=&quot;进程和内存&quot;&gt;进程和内存&lt;/h4&gt;
+
+&lt;h5 id=&quot;fork&quot;&gt;fork&lt;/h5&gt;
+
+&lt;p&gt;文件位置：kernel/proc.c。作用：创建一个进程。&lt;/p&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user/initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user/init.c。</summary></entry><entry><title type="html">xv6的启动：从进程初始化到多核调度</title><link href="http://localhost:4000/xv6/2019/12/15/xv6%E7%9A%84%E5%90%AF%E5%8A%A8-%E4%BB%8E%E8%BF%9B%E7%A8%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%B0%E5%A4%9A%E6%A0%B8%E8%B0%83%E5%BA%A6.html" rel="alternate" type="text/html" title="xv6的启动：从进程初始化到多核调度" /><published>2019-12-15T00:00:00+08:00</published><updated>2019-12-15T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2019/12/15/xv6%E7%9A%84%E5%90%AF%E5%8A%A8:%E4%BB%8E%E8%BF%9B%E7%A8%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%B0%E5%A4%9A%E6%A0%B8%E8%B0%83%E5%BA%A6</id><content type="html" xml:base="http://localhost:4000/xv6/2019/12/15/xv6%E7%9A%84%E5%90%AF%E5%8A%A8-%E4%BB%8E%E8%BF%9B%E7%A8%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%B0%E5%A4%9A%E6%A0%B8%E8%B0%83%E5%BA%A6.html">&lt;p&gt;操作系统处在硬件和用户程序之间，所以它是对硬件的抽象。前一篇分析的printf函数是对uart的抽象，地址映射是对内存的抽象。本篇准备分析启动过程的其它部分，这些也都是对某种硬件的抽象。&lt;/p&gt;
+
+&lt;h4 id=&quot;一-进程的初始化&quot;&gt;一、 进程的初始化&lt;/h4&gt;
+
+&lt;p&gt;procinit函数定义在kernel/proc.c，它的作用是初始化进程表。个人认为进程就是对CPU的抽象，进程表就是这种抽象的表现形式。xv6对各种硬件进行抽象都有相同的套路：首先要有一个自旋锁，其次把相关数据结构都放在一个数组里，其它部分往往是对前述数组里元素的某种补充。对进程表初始化的核心功能就是为每个进程分配栈空间。最后，使用kvminithart函数刷新TLB，使分配给各个PCB的栈生效。&lt;/p&gt;
+
+&lt;h4 id=&quot;二中断的初始化&quot;&gt;二、中断的初始化&lt;/h4&gt;
+
+&lt;p&gt;首先用trapinit函数初始化trap对应的锁。然后trapinithart函数向stvep寄存器写入kernelvec的地址，其中kernelvec是中断处理例程的入口。然后plicinit函数来使能硬件的中断，具体来说就是向PLIC的UART0和VIRTIO0中断使能位写入1。最后plicinithart函数来使能当前核接收中断。&lt;/p&gt;
+
+&lt;h4 id=&quot;三文件系统的初始化&quot;&gt;三、文件系统的初始化&lt;/h4&gt;
+
+&lt;p&gt;首先用binit来初始化缓冲区缓存。然后用iinit来初始化inode缓存。然后用fileinit来初始化文件表。最后用virtio_disk_init函数初始化硬盘。&lt;/p&gt;
+
+&lt;h4 id=&quot;四准备第一个用户进程&quot;&gt;四、准备第一个用户进程&lt;/h4&gt;
+
+&lt;p&gt;userinit函数在kernel/proc.c，用于准备第一个用户进程。主要是为用户进程分配资源，并将其状态改为RUNNABLE。当内核开始调度的时候第一个用户进程就开始执行了。&lt;/p&gt;
+
+&lt;h4 id=&quot;五多核调度&quot;&gt;五、多核调度&lt;/h4&gt;
+
+&lt;p&gt;每个核都会运行到scheduler函数，它用于多核调度。每个核干的事都是在所有进程里找状态为RUNNABLE的进程然后进行它。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数组cpus[]的元素是cpu的数据结构，mcpu()返回的是当前cpu所对应的那个cpus[]里的元素。&lt;/li&gt;
+  &lt;li&gt;intr_on()使能当前核的中断。&lt;/li&gt;
+  &lt;li&gt;acquire和release分别用于锁的请求和释放。&lt;/li&gt;
+  &lt;li&gt;swtch用于切换上下文，“返回”用户态。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">操作系统处在硬件和用户程序之间，所以它是对硬件的抽象。前一篇分析的printf函数是对uart的抽象，地址映射是对内存的抽象。本篇准备分析启动过程的其它部分，这些也都是对某种硬件的抽象。</summary></entry><entry><title type="html">从xv6的启动到内存初始化</title><link href="http://localhost:4000/xv6/2019/12/08/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96.html" rel="alternate" type="text/html" title="从xv6的启动到内存初始化" /><published>2019-12-08T00:00:00+08:00</published><updated>2019-12-08T00:00:00+08:00</updated><id>http://localhost:4000/xv6/2019/12/08/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96</id><content type="html" xml:base="http://localhost:4000/xv6/2019/12/08/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96.html">&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;
+
+&lt;h4 id=&quot;一-运行前的准备&quot;&gt;一、 运行前的准备&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/mit-pdos/xv6-riscv.git	# 下载xv6源码
+sudo apt install gcc-8-riscv64-linux-gnu	# 安装编译工具
+# 需自行编译qemu,编译目标为riscv64-softmmu
+cd xv6-riscv
+vim Makefile	# 把第51行的&quot;CC = ...&quot;里的&quot;gcc&quot;改为&quot;gcc-8&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;二运行xv6&quot;&gt;二、运行xv6&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd xv6-riscv
+make qemu 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;编译主要是生成kernel和fs.img两个文件。kernel是从kernel/目录下的文件编译出来的，它是xv6的内核。fs.img是一个镜像文件，包含了一些用户态的程序，这些程序是从user/目录编译出来的。这些用户态的程序，通过mkfs\目录下的mkfs.c生成的程序mkfs，放到fs.img里。&lt;/p&gt;
+
+&lt;h4 id=&quot;三内核的入口&quot;&gt;三、内核的入口&lt;/h4&gt;
+
+&lt;p&gt;kernel/kernel.ld是把内核链接起来的配置文件，在这个文件里指明了内核的入口是&lt;code class=&quot;highlighter-rouge&quot;&gt;_entry&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ENTRY( _entry )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_entry&lt;/code&gt;在文件kernel/entry.S，当前运行在机器态，这段代码的作用是为C代码的运行做准备，一旦做好准备就跳转到C代码的start函数开始执行。具体来看，它就是为每个核准备了4K大小的栈空间，这些栈的空间都在是kernel/start.c函数里分配的。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;__attribute__ ((aligned (16))) char stack0[4096 * NCPU];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;四跳转到c&quot;&gt;四、跳转到C&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;start&lt;/code&gt;函数在kernel/start.c，它的作用是为进入S特权级做好准备，一旦准备完成就进入S态，从&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;函数开始执行。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;设置mstatus寄存器告诉它我们是从S态进入的，设置mepc寄存器告诉它我们在S态的进入点是main，这样在执行mret指令后处理器就会“返回”到S态，从main函数开始执行。&lt;/li&gt;
+  &lt;li&gt;设置satp寄存器为0是告诉处理器在进入S态后不开启分页。&lt;/li&gt;
+  &lt;li&gt;设置medeleg和mideleg，告诉它们在S态处理异常和中断。所有的处理都放在S态，这样提升了效率，降低了代码的复杂度。&lt;/li&gt;
+  &lt;li&gt;timerinit函数用来设置计时器中断。&lt;/li&gt;
+  &lt;li&gt;把当前核的编号放在tp寄存器里，这是为内核函数cpuid准备的。&lt;/li&gt;
+  &lt;li&gt;执行mret指令，跳转到S态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;五内核的总控函数main&quot;&gt;五、内核的总控函数main&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;函数在kernel/main.c，处理器从这个函数开始进入了S态，这个函数是内核的总控函数，它完成了硬件及内核相关数据结构的初始化，最后以处理机调度的状态一直存在着。main函数之后，用户态的第一个进程开始执行了。&lt;/p&gt;
+
+&lt;h4 id=&quot;六与外界交互&quot;&gt;六、与外界交互&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;函数首先要做的事是与外界交互，这样才能看到内核运行的状况，方便定位问题。实现这个功能的函数是&lt;code class=&quot;highlighter-rouge&quot;&gt;consoleinit&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;printfinit&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;printf&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;consoleinit是从硬件的层面初始化输入输出。首先，它初始化了控制台的锁cons.lock，这是为了避免多个核同时使用控制台引发输入输出的混乱。然后，初始化uart。最后，把consoleread和consolewrite连接到系统调用read和write。&lt;/li&gt;
+  &lt;li&gt;printfinit函数的作用是初始化printf函数的锁pr.lock，这也是为了避免多个核同时使用printf函数引发输入输出的混乱。&lt;/li&gt;
+  &lt;li&gt;printf函数依赖于consputc，consputc依赖于uartputc。可见，对uart的初始化是实现printf函数的基础。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;七内存的初始化&quot;&gt;七、内存的初始化&lt;/h4&gt;
+
+&lt;p&gt;内存的初始化就是建立虚拟内存和物理内存之间的映射关系。实现这个功能的函数是&lt;code class=&quot;highlighter-rouge&quot;&gt;kinit&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;kvminit&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;kvminithart&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kinit把空闲内存加到了一个单向链表freelist里，这样就可以通过链表freelist来管理这些空闲内存了。&lt;/li&gt;
+  &lt;li&gt;kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核/用户空间切换的代码空间建立映射。&lt;/li&gt;
+  &lt;li&gt;kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</summary></entry><entry><title type="html">1月记录</title><link href="http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95.html" rel="alternate" type="text/html" title="1月记录" /><published>2019-01-02T00:00:00+08:00</published><updated>2019-01-02T00:00:00+08:00</updated><id>http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95</id><content type="html" xml:base="http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95.html">&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;2019-01-01&lt;/p&gt;
+
+    &lt;p&gt;在1月1日立下今年的flag。自省，健身，背单词，陪家人，写一本书，实现一个CPU，读两本书。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2019-01-02&lt;/p&gt;
+
+    &lt;p&gt;“如果方向错了，走的越远，只是错的越多。”我以为这是自己发现的，没想到老美早已认识到这一点。“Speed gets you nowhere if you’re headed the wrong way”。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2019-01-09&lt;/p&gt;
+
+    &lt;p&gt;记得某年去义井亲戚家，看到山的对面，有人放风筝超过了山顶。&lt;/p&gt;
+
+    &lt;p&gt;做人是面向对象，做事是面向过程。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="year2019" /><summary type="html">2019-01-01</summary></entry></feed>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="逆流" /></head>
+<style>@import url(/public/css/syntax/monokai.css);</style>
+  <title>逆流</title>
+  <!-- <link href="/public/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link href="/public/css/style.css" rel="stylesheet">
+  <body>
+  	<div class="container"> 
+		<div class="sidebar">
+			<div class="sidebar-item sidebar-header">
+	<div class='sidebar-brand'>
+		<a href="/about/">逆流</a>
+	</div>
+	<p class="lead">积土是功，成山是德。 </p></div>
+
+<div class="sidebar-item sidebar-nav">
+	<ul class="nav">
+      <li class="nav-title">博客</li>
+	  <li>
+	  	<a class="nav-item" href="/">文章</a>
+	  </li>
+	  
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/about/">
+	            	关于我
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	      
+	    
+	  
+	    
+	  
+	    
+	  
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-nav">
+  	<ul class="nav">
+			<li class="nav-title">分类</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2018">
+				<span class="name">year2018</span>
+				<span class="badge">3</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#ACPI">
+				<span class="name">ACPI</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#COD">
+				<span class="name">COD</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2019">
+				<span class="name">year2019</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#xv6">
+				<span class="name">xv6</span>
+				<span class="badge">6</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#programmer">
+				<span class="name">programmer</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#network">
+				<span class="name">network</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#os">
+				<span class="name">os</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	  </nav>
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-footer">
+	<p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a></p>
+	<p>Themed by ejjoo</p>
+</div>
+
+		</div>
+		<div class="content">
+			<article class="post">
+	<header class="post-header">
+		<div class="post-title"> 
+			ACPI的问题
+		</div>
+		<time class="post-date dt-published" datetime="2018-10-25T22:02:00+08:00" itemprop="datePublished">2018/10/25
+		</time>		
+	</header>
+
+	<div class="post-content">
+		<p>ACPI是高级配置和电源接口的缩写，我感觉自己碰到的计算机的问题里关于ACPI的问题都比较难搞。</p>
+
+<p>在安装arch linux的时候曾经碰到，在编辑文本的时候会自动输入字符的情况。在ubuntu下切换到其它控制台的时候，也会碰到从当前光标自动输入字符的情况。碰到最严重的问题是系统都无法安装，总是会自动重启。所有这些问题都有相同的解决方法，就是在启动的时候向内核传入参数<code class="highlighter-rouge">acpi=no</code>，意思是关闭acpi的功能。</p>
+
+<p>然而关闭acpi也有缺陷，系统的某些功能不能用了。比如点击关机选项只会停留在<code class="highlighter-rouge">system halted</code>阶段，还需要手动按下电源键关机。比如连接上第二个显示器没有反应。想使用第二个外接显示器怎么办呢？就是删除<code class="highlighter-rouge">acpi=no</code>参数。这样第二显示器可以显示了，而且以前出现的问题也消失了，即系统可以正常启动或关机了。我想这个问题可能的原因是，以前外接显示器时acpi的配置依然保存着，当没有外接显示器的时候acpi配置不正确导致不能进入桌面，关闭acpi可以进入桌面了但同时也不能连接第二个显示器了，当连接了第二个显示器同时又打开acpi的时候系统里保存的配置正确了，又能正常启动了。</p>
+
+	</div>
+</article>
+
+		</div>
+	</div>
+  </body>
+</html>
