@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="逆流" /></head>
+<style>@import url(/public/css/syntax/monokai.css);</style>
+  <title>逆流</title>
+  <!-- <link href="/public/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link href="/public/css/style.css" rel="stylesheet">
+  <body>
+  	<div class="container"> 
+		<div class="sidebar">
+			<div class="sidebar-item sidebar-header">
+	<div class='sidebar-brand'>
+		<a href="/about/">逆流</a>
+	</div>
+	<p class="lead">积土是功，成山是德。 </p></div>
+
+<div class="sidebar-item sidebar-nav">
+	<ul class="nav">
+      <li class="nav-title">博客</li>
+	  <li>
+	  	<a class="nav-item" href="/">文章</a>
+	  </li>
+	  
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/about/">
+	            	关于我
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	      
+	    
+	  
+	    
+	  
+	    
+	  
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-nav">
+  	<ul class="nav">
+			<li class="nav-title">分类</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2018">
+				<span class="name">year2018</span>
+				<span class="badge">3</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#ACPI">
+				<span class="name">ACPI</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#COD">
+				<span class="name">COD</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#year2019">
+				<span class="name">year2019</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#xv6">
+				<span class="name">xv6</span>
+				<span class="badge">6</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#programmer">
+				<span class="name">programmer</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#network">
+				<span class="name">network</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#os">
+				<span class="name">os</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#Linux">
+				<span class="name">Linux</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	  </nav>
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-footer">
+	<p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a></p>
+	<p>Themed by ejjoo</p>
+</div>
+
+		</div>
+		<div class="content">
+			<article class="post">
+	<header class="post-header">
+		<div class="post-title"> 
+			Strace命令小结
+		</div>
+		<time class="post-date dt-published" datetime="2021-05-30T22:02:00+08:00" itemprop="datePublished">2021/05/30
+		</time>		
+	</header>
+
+	<div class="post-content">
+		<h4 id="概述">概述</h4>
+
+<p><code class="highlighter-rouge">strace</code>用于追踪某个程序所使用的系统调用和所接收到的信号。它的用法是：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strace <span class="o">[</span>options] &lt;<span class="nb">command</span><span class="o">&gt;</span> <span class="o">[</span>args]
+</code></pre></div></div>
+
+<p>其中<code class="highlighter-rouge">command</code>就是所要运行的命令，<code class="highlighter-rouge">args</code>是<code class="highlighter-rouge">command</code>的参数。而<code class="highlighter-rouge">options</code>是<code class="highlighter-rouge">strace</code>命令的参数。</p>
+
+<p>在显示系统调用的时候，输出的格式为：系统调用名 + 传递的参数 + “=” + 返回值。</p>
+
+<p>在显示信号的时候，输出的格式为：信号的符号+ <code class="highlighter-rouge">siginfo</code>结构体。</p>
+
+<h4 id="选项">选项</h4>
+
+<p>把信息输出到文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-o</span> &lt;filename&gt;	<span class="c"># 把输出写入文件filename，而不是写到stderr.</span>
+</code></pre></div></div>
+
+<p>增加输出的信息：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-d</span>	<span class="c"># 显示一些调试信息。</span>
+<span class="nt">-i</span>	<span class="c"># 打印出系统调用的指针。</span>
+<span class="nt">-t</span>	<span class="c"># 打印出系统调用的时间，精确到秒。</span>
+<span class="nt">-tt</span>	<span class="c"># 打印出系统调用的时间，精确到毫秒。</span>
+<span class="nt">-ttt</span>	<span class="c"># 打印出epoch以来的秒数+系统调用的时间(精确到毫秒)。</span>
+<span class="nt">-T</span>	<span class="c"># 打印系统调用所花费的时间。</span>
+</code></pre></div></div>
+
+<p>减少输出的信息：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-e</span> &lt;<span class="nb">expr</span><span class="o">&gt;</span>	<span class="c"># 用expr来定义要追踪的事件及追踪它的方式。</span>
+	<span class="c"># expr的格式：[qualifier=][!][?]&lt;value1&gt;[,[?]value2...]</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>&lt;<span class="nb">set</span><span class="o">&gt;</span>	<span class="c"># 指定要追踪的系统调用。默认trace=all。</span>
+	<span class="c"># set指系统调用的集合，如：open,close,read,write</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>%file	<span class="c"># 追踪以文件名为参数的系统调用</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>%process	<span class="c"># 追踪进程管理的系统调用</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>%network	<span class="c"># 追踪网络相关的系统调用</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>%signal	<span class="c"># 追踪信号相关的系统调用</span>
+<span class="nt">-e</span> <span class="nv">trace</span><span class="o">=</span>%ipc		<span class="c"># 追踪IPC相关的系统调用</span>
+<span class="nt">-f</span>	<span class="c"># 仅追踪子进程。这些子进程就是要追踪的进程，它们一般由fork,vfork或clone系统调用创建。</span>
+<span class="nt">-v</span>	<span class="c"># 打印出系统调用参数的详细信息。</span>
+</code></pre></div></div>
+
+<p>调整输出的格式：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-c</span>	<span class="c"># 统计每个系统调用的时间、调用次数和错误次数。</span>
+<span class="nt">-S</span> &lt;sortby&gt;	<span class="c"># 对输出的结果排序。可选参数有time,calls,name,nothing，默认time.</span>
+</code></pre></div></div>
+
+
+	</div>
+</article>
+
+		</div>
+	</div>
+  </body>
+</html>

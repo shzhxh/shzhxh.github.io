@@ -1,4 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-05-30T17:55:56+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">逆流</title><subtitle>积土是功，成山是德。 </subtitle><entry><title type="html">操作系统的启动过程</title><link href="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html" rel="alternate" type="text/html" title="操作系统的启动过程" /><published>2021-05-23T22:02:00+08:00</published><updated>2021-05-23T22:02:00+08:00</updated><id>http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B</id><content type="html" xml:base="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html">&lt;p&gt;操作系统的启动过程，就是修改内存和寄存器的过程。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-05-30T22:13:10+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">逆流</title><subtitle>积土是功，成山是德。 </subtitle><entry><title type="html">Strace命令小结</title><link href="http://localhost:4000/linux/2021/05/30/Strace%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%BB%93.html" rel="alternate" type="text/html" title="Strace命令小结" /><published>2021-05-30T22:02:00+08:00</published><updated>2021-05-30T22:02:00+08:00</updated><id>http://localhost:4000/linux/2021/05/30/Strace%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%BB%93</id><content type="html" xml:base="http://localhost:4000/linux/2021/05/30/Strace%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%BB%93.html">&lt;h4 id=&quot;概述&quot;&gt;概述&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strace&lt;/code&gt;用于追踪某个程序所使用的系统调用和所接收到的信号。它的用法是：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;strace &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;options] &amp;lt;&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;args]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其中&lt;code class=&quot;highlighter-rouge&quot;&gt;command&lt;/code&gt;就是所要运行的命令，&lt;code class=&quot;highlighter-rouge&quot;&gt;args&lt;/code&gt;是&lt;code class=&quot;highlighter-rouge&quot;&gt;command&lt;/code&gt;的参数。而&lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt;是&lt;code class=&quot;highlighter-rouge&quot;&gt;strace&lt;/code&gt;命令的参数。&lt;/p&gt;
+
+&lt;p&gt;在显示系统调用的时候，输出的格式为：系统调用名 + 传递的参数 + “=” + 返回值。&lt;/p&gt;
+
+&lt;p&gt;在显示信号的时候，输出的格式为：信号的符号+ &lt;code class=&quot;highlighter-rouge&quot;&gt;siginfo&lt;/code&gt;结构体。&lt;/p&gt;
+
+&lt;h4 id=&quot;选项&quot;&gt;选项&lt;/h4&gt;
+
+&lt;p&gt;把信息输出到文件：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &amp;lt;filename&amp;gt;	&lt;span class=&quot;c&quot;&gt;# 把输出写入文件filename，而不是写到stderr.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;增加输出的信息：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 显示一些调试信息。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印出系统调用的指针。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印出系统调用的时间，精确到秒。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-tt&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印出系统调用的时间，精确到毫秒。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-ttt&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印出epoch以来的秒数+系统调用的时间(精确到毫秒)。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印系统调用所花费的时间。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;减少输出的信息：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &amp;lt;&lt;span class=&quot;nb&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 用expr来定义要追踪的事件及追踪它的方式。&lt;/span&gt;
+	&lt;span class=&quot;c&quot;&gt;# expr的格式：[qualifier=][!][?]&amp;lt;value1&amp;gt;[,[?]value2...]&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 指定要追踪的系统调用。默认trace=all。&lt;/span&gt;
+	&lt;span class=&quot;c&quot;&gt;# set指系统调用的集合，如：open,close,read,write&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%file	&lt;span class=&quot;c&quot;&gt;# 追踪以文件名为参数的系统调用&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%process	&lt;span class=&quot;c&quot;&gt;# 追踪进程管理的系统调用&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%network	&lt;span class=&quot;c&quot;&gt;# 追踪网络相关的系统调用&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%signal	&lt;span class=&quot;c&quot;&gt;# 追踪信号相关的系统调用&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%ipc		&lt;span class=&quot;c&quot;&gt;# 追踪IPC相关的系统调用&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 仅追踪子进程。这些子进程就是要追踪的进程，它们一般由fork,vfork或clone系统调用创建。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 打印出系统调用参数的详细信息。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;调整输出的格式：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 统计每个系统调用的时间、调用次数和错误次数。&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; &amp;lt;sortby&amp;gt;	&lt;span class=&quot;c&quot;&gt;# 对输出的结果排序。可选参数有time,calls,name,nothing，默认time.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="Linux" /><summary type="html">概述</summary></entry><entry><title type="html">操作系统的启动过程</title><link href="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html" rel="alternate" type="text/html" title="操作系统的启动过程" /><published>2021-05-23T22:02:00+08:00</published><updated>2021-05-23T22:02:00+08:00</updated><id>http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B</id><content type="html" xml:base="http://localhost:4000/os/2021/05/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.html">&lt;p&gt;操作系统的启动过程，就是修改内存和寄存器的过程。&lt;/p&gt;
 
 &lt;p&gt;它的目的，就是在硬件的整个运行过程中，向应用程序提供使用硬件的服务。&lt;/p&gt;</content><author><name></name></author><category term="os" /><summary type="html">操作系统的启动过程，就是修改内存和寄存器的过程。</summary></entry><entry><title type="html">回顾网络相关的知识</title><link href="http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86.html" rel="alternate" type="text/html" title="回顾网络相关的知识" /><published>2021-05-16T22:02:00+08:00</published><updated>2021-05-16T22:02:00+08:00</updated><id>http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86</id><content type="html" xml:base="http://localhost:4000/network/2021/05/16/%E5%9B%9E%E9%A1%BE%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86.html">&lt;p&gt;SSH协议处于应用层，即安全外壳协议(Secure Shell)。&lt;/p&gt;
 
@@ -237,22 +286,4 @@ make qemu
   &lt;li&gt;kinit把空闲内存加到了一个单向链表freelist里，这样就可以通过链表freelist来管理这些空闲内存了。&lt;/li&gt;
   &lt;li&gt;kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核/用户空间切换的代码空间建立映射。&lt;/li&gt;
   &lt;li&gt;kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</summary></entry><entry><title type="html">1月记录</title><link href="http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95.html" rel="alternate" type="text/html" title="1月记录" /><published>2019-01-02T00:00:00+08:00</published><updated>2019-01-02T00:00:00+08:00</updated><id>http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95</id><content type="html" xml:base="http://localhost:4000/year2019/2019/01/02/1%E6%9C%88%E8%AE%B0%E5%BD%95.html">&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;2019-01-01&lt;/p&gt;
-
-    &lt;p&gt;在1月1日立下今年的flag。自省，健身，背单词，陪家人，写一本书，实现一个CPU，读两本书。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2019-01-02&lt;/p&gt;
-
-    &lt;p&gt;“如果方向错了，走的越远，只是错的越多。”我以为这是自己发现的，没想到老美早已认识到这一点。“Speed gets you nowhere if you’re headed the wrong way”。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2019-01-09&lt;/p&gt;
-
-    &lt;p&gt;记得某年去义井亲戚家，看到山的对面，有人放风筝超过了山顶。&lt;/p&gt;
-
-    &lt;p&gt;做人是面向对象，做事是面向过程。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="year2019" /><summary type="html">2019-01-01</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><category term="xv6" /><summary type="html">这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</summary></entry></feed>
