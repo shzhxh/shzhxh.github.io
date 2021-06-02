@@ -32,7 +32,9 @@ cp /usr/include/riscv64-linux-gnu/asm/byteorder.h /usr/include/asm-generic
 # 编译busybox
 wget https://busybox.net/downloads/busybox-1.33.1.tar.bz2
 tar xf busybox-1.33.1.tar.bz2 && cd busy*
-make menuconfig	# 选择CONFIG_STATIC=y
+vi menuconfig	# 把"CC = gcc"改为"CC = gcc-10"，为了使下一条命令正确执行
+make menuconfig	# 默认动态编译，如需静态编译则设置CONFIG_STATIC=y
+vi menuconfig	# 把"CC = gcc-10"改为"CC = gcc"，为了基于musl库编译busybox
 make
 ```
 
