@@ -9,6 +9,8 @@ rt-tests是一个测试套件，用来测试实时操作系统的特性。
 
 rt-tests的内容主要是一二三。
 
+<!-- more -->
+
 - 一个测试目标：操作系统的实时性。
 - 二个影响因素：系统负载(hackbench)、优先级反转(pi_test)。
 - 三种时延：硬件的时延(hwlat)、内核的时延(sendme, cyclic, rt-migrate)、进程间通信的时延(pmq, ptsema, svsema, signal, sigwait)。

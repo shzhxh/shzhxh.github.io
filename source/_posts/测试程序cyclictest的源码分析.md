@@ -12,6 +12,8 @@ categories: Command
 
 Non-Uniform Memory Access，非一致性内存访问。
 
+<!-- more -->
+
 numa出现之前，所有CPU共用一根总线访问内存(UMA，统一内存访问)。UMA的问题是随着CPU核数增加，访存效率下降。
 
 在numa架构里，有结点的概念。一个结点里包含了若干CPU和内存。结点内部访存快，结点外部访存慢，访存存在着本地和远程的区别。可以使用`numactl --hardware`命令查看系统中的numa结点。

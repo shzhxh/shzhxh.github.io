@@ -7,6 +7,8 @@ categories: COD
 
 UART(Universal Asynchronous Receiver/Transmitter)，一个串行异步传输的协议。发送端和接收端的波特率要基本相同才能正确工作，通过在数据前面加开始位、后面加结束位来确定传输的开始和结束。
 
+<!-- more -->
+
 数据格式：
 
 | 位的名称 | 起始位 | 数据位 | 奇偶校验位 | 结束位 |

@@ -7,7 +7,11 @@ categories: OS
 
 想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。
 
-第一步是把编译环境建立起来。先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除`/usr/include`目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。
+第一步是把编译环境建立起来。
+
+<!-- more -->
+
+先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除`/usr/include`目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。
 
 1. 在[这个网址](https://wiki.minix3.org/doku.php?id=www:download:previousversions)下载OSDI这本书所对应的minix3：minix-3.1.0-book.iso.bz2，解压后是个iso文件。
 

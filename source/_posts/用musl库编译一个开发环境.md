@@ -7,6 +7,8 @@ categories: Musl
 
 参考了这位老哥[Tim Tassonis](https://www.openwall.com/lists/musl/2014/08/08/13)的文档，虽然是2014年写的，但并不过时。
 
+<!-- more -->
+
 编译平台：运行于qemu-system-riscv64上的Debian
 
 编译环境的准备

@@ -9,6 +9,8 @@ categories: Linux
 
 #### 1.1 下载内核与补丁
 
+<!-- more -->
+
 ```shell
 # 内核下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/
 # 补丁下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/

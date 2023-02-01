@@ -7,7 +7,11 @@ categories: Linux
 
 #### 概述
 
-`strace`用于追踪某个程序所使用的系统调用和所接收到的信号。它的用法是：
+`strace`用于追踪某个程序所使用的系统调用和所接收到的信号。
+
+<!-- more -->
+
+它的用法是：
 
 ```bash
 strace [options] <command> [args]

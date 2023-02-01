@@ -5,6 +5,10 @@ date:   2022-01-03 21:38:00 +0800
 categories: OS
 ---
 
+主要分成了5步，如下所示：
+
+<!-- more -->
+
 ```bash
 # 1. 添加kitware APT仓库
 wget https://apt.kitware.com/kitware-archive.sh

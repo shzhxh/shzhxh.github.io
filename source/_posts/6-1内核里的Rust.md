@@ -7,6 +7,8 @@ tags:
 
 这是一篇翻译文档，源链接：[lwn](https://lwn.net/Articles/910762/)
 
+<!-- more -->
+
 #### 概述
 
 - Linux6.1内核引入了对Rust语言的支持。
