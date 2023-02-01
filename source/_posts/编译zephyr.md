@@ -2,7 +2,7 @@
 layout: post
 title:  "编译zephyr"
 date:   2022-01-03 21:38:00 +0800
-categories: os
+categories: OS
 ---
 
 ```bash

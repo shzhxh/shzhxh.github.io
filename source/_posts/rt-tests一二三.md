@@ -2,7 +2,7 @@
 layout: post
 title:  "rt-tests一二三"
 date:   2021-12-25 20:38:00 +0800
-categories: command
+categories: Command
 ---
 
 rt-tests是一个测试套件，用来测试实时操作系统的特性。

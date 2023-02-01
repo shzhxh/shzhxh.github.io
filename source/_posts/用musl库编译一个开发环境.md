@@ -2,7 +2,7 @@
 layout: post
 title:  "用musl库编译一个开发环境"
 date:   2021-06-01 22:02:00 +0800
-categories: musl
+categories: Musl
 ---
 
 参考了这位老哥[Tim Tassonis](https://www.openwall.com/lists/musl/2014/08/08/13)的文档，虽然是2014年写的，但并不过时。

@@ -2,7 +2,7 @@
 layout: post
 title:  "测试程序cyclictest的源码分析"
 date:   2021-12-12 21:38:00 +0800
-categories: command
+categories: Command
 ---
 
 

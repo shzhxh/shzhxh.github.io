@@ -2,7 +2,7 @@
 layout: post
 title:  "UEFI概述"
 date:   2022-01-09 21:38:00 +0800
-categories: os
+categories: OS
 ---
 
 UEFI的核心是后面的FI（固件接口），即它本身是个协议，需要硬件和软件的支持。
