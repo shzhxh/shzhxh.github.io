@@ -8,7 +8,8 @@
     
     <title>OSDI一：编译环境 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;p&gt;想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。&lt;/p&gt;
+&lt;p&gt;第一步是把编译环境建立起来。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +17,21 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "OSDI一：编译环境 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;p&gt;想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。&lt;/p&gt;
+&lt;p&gt;第一步是把编译环境建立起来。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;p&gt;想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。&lt;/p&gt;
+&lt;p&gt;第一步是把编译环境建立起来。&lt;/p&gt;" />
     <meta name="twitter:title" content="OSDI一：编译环境 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;p&gt;想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。&lt;/p&gt;
+&lt;p&gt;第一步是把编译环境建立起来。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;p&gt;想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。&lt;/p&gt;
+&lt;p&gt;第一步是把编译环境建立起来。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/index.html",
@@ -138,7 +143,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1f20008bmonc77x3dgm" class="article article-type-post" itemscope
+    <article id="post-cldleqo400008byohgwda3kri" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,7 +186,10 @@
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
             <p>想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。</p>
-<p>第一步是把编译环境建立起来。先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除<code>/usr/include</code>目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。</p>
+<p>第一步是把编译环境建立起来。</p>
+<span id="more"></span>
+
+<p>先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除<code>/usr/include</code>目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。</p>
 <ol>
 <li><p>在<a target="_blank" rel="noopener" href="https://wiki.minix3.org/doku.php?id=www:download:previousversions">这个网址</a>下载OSDI这本书所对应的minix3：minix-3.1.0-book.iso.bz2，解压后是个iso文件。</p>
 </li>

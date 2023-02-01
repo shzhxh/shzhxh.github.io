@@ -143,31 +143,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>这是一篇翻译文档，源链接：<a target="_blank" rel="noopener" href="https://lwn.net/Articles/910762/">lwn</a></p>
-<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><ul>
-<li>Linux6.1内核引入了对Rust语言的支持。</li>
-<li>6.1内核不运行Rust代码，只是给了内核开发者体验Rust开发的机会。</li>
-<li>开发者所能做的事是构建一个可以加载到内核里的模块。</li>
-<li>开发者很可能会觉得内核里的Rust还不够做一些有趣的事。</li>
-</ul>
-<h4 id="Rust-for-Linux的相关工作"><a href="#Rust-for-Linux的相关工作" class="headerlink" title="Rust for Linux的相关工作"></a>Rust for Linux的相关工作</h4><ul>
-<li>支持代码</li>
-<li>驱动程序</li>
-<li>Apple图形驱动程序</li>
-</ul>
-<h4 id="构建Rust支持"><a href="#构建Rust支持" class="headerlink" title="构建Rust支持"></a>构建Rust支持</h4><ul>
-<li>参考<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/rust/quick-start.rst">quick-start</a>以获取构建Rust支持的条件。</li>
-<li>Rust编译器要求是1.62.0。</li>
-<li>bindgen要求是0.56.0。</li>
-</ul>
-<h4 id="示例模块"><a href="#示例模块" class="headerlink" title="示例模块"></a>示例模块</h4><ul>
-<li>条件满足后，内核配置系统将出现CONFIG_RUST选项，可以构建示例模块了。</li>
-<li>示例模块是samples&#x2F;rust&#x2F;rust_minimal.rs<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> kernel::prelude::*;  <span class="comment">// 引入一些类型、函数和宏  </span></span><br><span class="line"><span class="comment">// 用一个宏取代C内核模块里的宏 </span></span><br><span class="line">module! &#123;</span><br><span class="line">    <span class="keyword">type</span>: RustMinimal,  <span class="comment">// 实际模块代码的入口</span></span><br><span class="line">    name: <span class="string">&quot;rust_minimal&quot;</span>,</span><br><span class="line">    author: <span class="string">&quot;Rust for Linux Contributors&quot;</span>,</span><br><span class="line">    description: <span class="string">&quot;Rust minimal sample&quot;</span>,</span><br><span class="line">    license: <span class="string">&quot;GPL&quot;</span>, </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 开发人员需要提供RustMinimal的定义 </span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">RustMinimal</span> &#123;</span><br><span class="line">    numbers: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;, </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 为RustMinimal实现kernel::Module的trait </span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">kernel</span>::Module <span class="keyword">for</span> <span class="title class_">RustMinimal</span> &#123;</span><br><span class="line">    <span class="comment">// 模块初始化，打印2行信息，然后保存一些数字</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">init</span>() <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="keyword">Self</span>&gt; &#123;</span><br><span class="line">        ...    &#125; </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 析构函数的实现 </span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">RustMinimal</span> &#123;</span><br><span class="line">    <span class="comment">// 打印一些数字后，模块被移除，内存被释放</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h4><ul>
-<li>下一步是添加一些基础设施以与其它内核子系统交互</li>
-<li>幸运的话，6.2内核里的Rust功能将显著增强</li>
-</ul>
-
         
     </div>
     </div>
@@ -215,17 +190,7 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。</p>
-<p>第一步是把编译环境建立起来。先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除<code>/usr/include</code>目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。</p>
-<ol>
-<li><p>在<a target="_blank" rel="noopener" href="https://wiki.minix3.org/doku.php?id=www:download:previousversions">这个网址</a>下载OSDI这本书所对应的minix3：minix-3.1.0-book.iso.bz2，解压后是个iso文件。</p>
-</li>
-<li><p>按<a target="_blank" rel="noopener" href="https://wiki.minix3.org/doku.php?id=usersguide:runningonqemu">这个网址</a>的描述创建qemu的启动硬盘。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create minix.img 8G	<span class="comment"># 创建一个硬盘镜像</span></span><br><span class="line">qemu-system-x86_64 -net user -net nic -m 256 -cdrom minix.iso -hda minix.img -boot d	<span class="comment"># 在qemu上执行安装过程</span></span><br><span class="line"><span class="comment"># 输入root登入系统，输入setup执行安装过程</span></span><br><span class="line">poweroff	<span class="comment"># 安装完毕，退出系统</span></span><br><span class="line">off			<span class="comment"># 在接下来的提示符输入此命令退出qemu</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启动minix3</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -net user -net nic -m 256 -hda minix.img</span><br><span class="line"><span class="comment"># 用户名依然是root</span></span><br><span class="line"><span class="built_in">ls</span> /usr/src		<span class="comment"># 书上所需源码在此目录</span></span><br><span class="line"><span class="built_in">which</span> cc aal	<span class="comment"># 编译环境已具备</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-
+<p>第一步是把编译环境建立起来。</p>
         
     </div>
     </div>
@@ -273,19 +238,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>如何创建进程？</p>
-<p>C语言在unistd.h定义了如下函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/* (char  *) NULL */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/* (char  *) NULL */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execle</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/*, (char *) NULL, char * const envp[] */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execv</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">char</span> *<span class="type">const</span> argv[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvp</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">char</span> *<span class="type">const</span> argv[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvpe</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">char</span> *<span class="type">const</span> argv[],</span></span><br><span class="line"><span class="params">                       <span class="type">char</span> *<span class="type">const</span> envp[])</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>形式都是<code>exec*</code>。</li>
-<li>必须带l或v，意思是参数的形式。l：参数是list的形式；v：参数是victor的形式。</li>
-<li>p的意思是怎么找到可执行文件。不带p通过路径；带p除了通过路径，还可以在PATH环境变量里找(如不包含斜杠)。</li>
-<li>e的意思是可以通过参数指定环境。</li>
-</ul>
-<p>Python3有subprocess模块：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># subprocess替代老旧的os.system、os.spawn*</span></span><br><span class="line">subprocess.run(args, *, stdin=<span class="literal">None</span>, <span class="built_in">input</span>=<span class="literal">None</span>, stdout=<span class="literal">None</span>, stderr=<span class="literal">None</span>, capture_output=<span class="literal">False</span>, shell=<span class="literal">False</span>, cwd=<span class="literal">None</span>, timeout=<span class="literal">None</span>, check=<span class="literal">False</span>, encoding=<span class="literal">None</span>, errors=<span class="literal">None</span>, text=<span class="literal">None</span>, env=<span class="literal">None</span>, universal_newlines=<span class="literal">None</span>, **other_popen_kwargs)</span><br><span class="line">	<span class="comment"># 返回值：subprocess.CompletedProcess</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">subprocess</span>.Popen(args, bufsize=- <span class="number">1</span>, executable=<span class="literal">None</span>, stdin=<span class="literal">None</span>, stdout=<span class="literal">None</span>, stderr=<span class="literal">None</span>, preexec_fn=<span class="literal">None</span>, close_fds=<span class="literal">True</span>, shell=<span class="literal">False</span>, cwd=<span class="literal">None</span>, env=<span class="literal">None</span>, universal_newlines=<span class="literal">None</span>, startupinfo=<span class="literal">None</span>, creationflags=<span class="number">0</span>, restore_signals=<span class="literal">True</span>, start_new_session=<span class="literal">False</span>, pass_fds=(), *, group=<span class="literal">None</span>, extra_groups=<span class="literal">None</span>, user=<span class="literal">None</span>, umask=- <span class="number">1</span>, encoding=<span class="literal">None</span>, errors=<span class="literal">None</span>, text=<span class="literal">None</span>, pipesize=- <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-
         
     </div>
     </div>
@@ -333,31 +285,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>UART(Universal Asynchronous Receiver&#x2F;Transmitter)，一个串行异步传输的协议。发送端和接收端的波特率要基本相同才能正确工作，通过在数据前面加开始位、后面加结束位来确定传输的开始和结束。</p>
-<p>数据格式：</p>
-<table>
-<thead>
-<tr>
-<th>位的名称</th>
-<th>起始位</th>
-<th>数据位</th>
-<th>奇偶校验位</th>
-<th>结束位</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>位数</td>
-<td>1</td>
-<td>5~8</td>
-<td>1</td>
-<td>1~2</td>
-</tr>
-</tbody></table>
-<p>波特率：每秒传输的码元个数。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">波特率*每个码元的位数=比特率</span><br><span class="line"></span><br><span class="line">波特率*每个码元占用的时钟周期=时钟频率</span><br></pre></td></tr></table></figure>
-
-
-
-
         
     </div>
     </div>
@@ -406,40 +333,6 @@ class="article article-type-post"
         
         <p>UEFI的核心是后面的FI（固件接口），即它本身是个协议，需要硬件和软件的支持。</p>
 <p>硬件和固件厂商都已提供，对于内核开发者来说，需要做的就是编写一个UEFI应用程序来加载内核。</p>
-<h4 id="UEFI启动过程"><a href="#UEFI启动过程" class="headerlink" title="UEFI启动过程"></a>UEFI启动过程</h4><h5 id="1-SEC-安全验证"><a href="#1-SEC-安全验证" class="headerlink" title="1. SEC(安全验证)"></a>1. SEC(安全验证)</h5><p>计算机系统加电后进入此阶段。</p>
-<ul>
-<li>进入固件入口</li>
-<li>从实模式进入32位平坦模式</li>
-<li>定位固件中的BFV(Boot Firmware Volume)</li>
-<li>定位BFV中的SEC映像</li>
-<li>从32位模式进入64位模式</li>
-<li>调用SEC入口函数</li>
-<li>利用CAR(Cache As Ram)技术初始化栈</li>
-<li>调用PEI入口函数</li>
-</ul>
-<h5 id="2-PEI-EFI前期初始化"><a href="#2-PEI-EFI前期初始化" class="headerlink" title="2. PEI(EFI前期初始化)"></a>2. PEI(EFI前期初始化)</h5><p>将需要传递给DXE的信息组成HOB(Handoff Block)列表，然后将控制权转交到DXE手中。</p>
-<ul>
-<li>初始化PS(PEI Core Service)</li>
-<li>调度系统中的PEIM(PEI模块)</li>
-<li>准备HOB列表</li>
-<li>调用DXE入口函数</li>
-</ul>
-<h5 id="3-DXE-驱动执行环境"><a href="#3-DXE-驱动执行环境" class="headerlink" title="3. DXE(驱动执行环境)"></a>3. DXE(驱动执行环境)</h5><p>执行大部分系统初始化工作。</p>
-<ul>
-<li>根据HOB列表初始化系统服务</li>
-<li>调度系统中的驱动</li>
-<li>调用BDS入口函数</li>
-</ul>
-<h5 id="4-BDS-启动设备选择"><a href="#4-BDS-启动设备选择" class="headerlink" title="4. BDS(启动设备选择)"></a>4. BDS(启动设备选择)</h5><p>BDS被认为是一种特殊的DXE阶段的应用程序，主要执行启动策略。</p>
-<ul>
-<li>初始化控制台设备</li>
-<li>加载必要的设备驱动</li>
-<li>加载和执行启动项</li>
-</ul>
-<h5 id="5-TSL-操作系统加载前期"><a href="#5-TSL-操作系统加载前期" class="headerlink" title="5. TSL(操作系统加载前期)"></a>5. TSL(操作系统加载前期)</h5><p>OS Loader运行的阶段，OS Loader是一个UEFI应用程序。此时系统资源仍由UEFI内核控制。默认运行OS Loader，但如果用户干预则进入UEFI Shell。当ExitBootServices()服务被调用后，则进入RT阶段。</p>
-<h5 id="6-RT-操作系统运行"><a href="#6-RT-操作系统运行" class="headerlink" title="6. RT(操作系统运行)"></a>6. RT(操作系统运行)</h5><p>OS获得系统控制权。</p>
-<h5 id="7-AL-After-Life"><a href="#7-AL-After-Life" class="headerlink" title="7. AL(After Life)"></a>7. AL(After Life)</h5><p>为系统固件提供错误处理和灾难恢复机制。</p>
-
         
     </div>
     </div>
@@ -486,8 +379,7 @@ class="article article-type-post"
     </header>
     <div class="article-entry post-inner-html">
         
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 添加kitware APT仓库</span></span><br><span class="line">wget https://apt.kitware.com/kitware-archive.sh</span><br><span class="line">sudo bash kitware-archive.sh</span><br><span class="line"><span class="comment"># 2. 安装依赖</span></span><br><span class="line">sudo apt install --no-install-recommends git cmake ninja-build gperf \</span><br><span class="line">  ccache dfu-util device-tree-compiler wget \</span><br><span class="line">  python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file \</span><br><span class="line">  make gcc gcc-multilib g++-multilib libsdl2-dev</span><br><span class="line"><span class="comment"># 3. 下载zephyr</span></span><br><span class="line">pip3 install --user -U west</span><br><span class="line">west init zephyrproject</span><br><span class="line"><span class="built_in">cd</span> zephyrproject</span><br><span class="line">west update</span><br><span class="line">west zephyr-export</span><br><span class="line">pip3 install --user -r ./zephyr/scripts/requirements.txt</span><br><span class="line"><span class="comment"># 4. 安装工具链</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.13.2/zephyr-sdk-0.13.2-linux-x86_64-setup.run</span><br><span class="line"><span class="built_in">chmod</span> +x zephyr-sdk-0.13.2-linux-x86_64-setup.run</span><br><span class="line">./zephyr-sdk-0.13.2-linux-x86_64-setup.run -- -d ~/zephyr-sdk-0.13.2y</span><br><span class="line">sudo <span class="built_in">cp</span> sysroots/x86_64-pokysdk-linux/usr/share/openocd/contrib/60-openocd.rules /etc/udev/rules.d</span><br><span class="line">sudo udevadm control --reload</span><br><span class="line"><span class="comment"># 5. </span></span><br><span class="line"><span class="built_in">cd</span> ~/zephyrproject/zephyr</span><br><span class="line">west build -b qemu-riscv64 samples/synchronization</span><br><span class="line">west build -t run</span><br></pre></td></tr></table></figure>
-
+        <p>主要分成了5步，如下所示：</p>
         
     </div>
     </div>
@@ -535,15 +427,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>计算机之间通过网线连接成网络，计算机内部之间通过总线连接成一体。计算机之间要通信，不光要有网线，还要有网络协议。计算机内部各个设备之间要通信，不光要有总线，还要有总线协议。</p>
-<p>片内总线是芯片内的总线，这是芯片设计师需要关心的问题。</p>
-<p>系统总线是设备之间的总线，这是系统程序员需要关心的问题。</p>
-<p>通信总线是计算机与外部连接的总线。</p>
-<p>单总线结构是所有设备都连在一根总线上。</p>
-<p>双总线结构把CPU和主存连上主存总线，其它外设连上IO总线，主存总线和IO总线通过通道连接。</p>
-<p>三总线结构把CPU和主存连上主存总线，把CPU和外设连上IO总线，把主存和高速外设连上DMA总线。</p>
-<p>四总线结构使用桥接器把速度不同的总线连接起来。</p>
-<p>总线使用的时钟就是系统的时钟，所以总线传输速率就取决于一次总线操作占用多少个时钟，以及总线上有多少根数据线。现实情况是并行传输的频率受限，串行传输虽只有一根数据线但频率可以很高，所以串行总线的传输速率反而高。</p>
-
         
     </div>
     </div>
@@ -592,39 +475,6 @@ class="article article-type-post"
         
         <p>rt-tests是一个测试套件，用来测试实时操作系统的特性。</p>
 <p>rt-tests的内容主要是一二三。</p>
-<ul>
-<li>一个测试目标：操作系统的实时性。</li>
-<li>二个影响因素：系统负载(hackbench)、优先级反转(pi_test)。</li>
-<li>三种时延：硬件的时延(hwlat)、内核的时延(sendme, cyclic, rt-migrate)、进程间通信的时延(pmq, ptsema, svsema, signal, sigwait)。</li>
-</ul>
-<p>如何对这些特性进行测试呢？</p>
-<ul>
-<li><p>backfire、sendme：测量信号在用户程序和内核之间传送的时延。用内核模块记录内核收到信号的时间，用应用程序记录发信号的时间和收到信号的时间，这样就得到了信号从用户进程到内核，内核到用户进程的时间。</p>
-</li>
-<li><p>cyclictest：测量系统的延迟。主线程创建一堆子线程，子线程会睡眠一小会儿并记录时间，这样就可以算出实际睡眠时间和理论睡眠时间的差值，这是硬件系统和内核产生的延迟，主线程会把这些延迟打印出来。</p>
-</li>
-<li><p>hackbench：给系统增加负载。主线程创建若干对儿子线程，一对儿子线程里一个不停发数据一个不停收数据，这样就占满CPU。</p>
-</li>
-<li><p>pi_tests：包含两个程序pi_stress和pip_stress，当子进程之间优先级不同的时候，存在优先级反转的问题，可以用优先级继承的方式解决这个问题。</p>
-<p>pip_stress是测量进程之间的优先级继承，低优先级的主进程创建高优先级的子进程pid1，pid1创建中优先级的子进程pid2，这三个进程之间进行优先级继承的测试。</p>
-<p>pi_stress是测量线程之间的优先级继承，主线程创建若干组子线程，每个组包含三个优先级不同的子线程，这三个子线程之间进行优先级继承的测试。</p>
-</li>
-<li><p>pmqtest：测量消息队列的时延。主线程创建若干对儿子线程，一对儿子线程里一个不停通过消息队列发消息一个不停通过消息队列收消息，只要记录到发之前的时间和收到后的时间，就可计算出消息队列的时延。</p>
-</li>
-<li><p>ptsematest：测量互斥锁的时延。主线程创建若干对儿子线程，一对儿子线程里一个不停给互斥量解锁一个不停给互斥量上锁，只要记录到解锁前和上锁后的时间差，就可以计算出互斥锁的时延。</p>
-</li>
-<li><p>rt-migrate-test：测量高优先级线程的可迁移性。主线程会创建三种优先级的线程，三种优先级的线程做相同的工作，高优先级的线程不管迁移到哪个核，都应该是最快的。</p>
-</li>
-<li><p>signaltest：测量信号在多个线程间传递的时延。主线程创建一堆子线程，子线程排成一圈传信号，只要记录下其中一个线程信号传出去的时间和信号传回来的时间，就可以计算出信号在子线程之间传一圈用了多久。</p>
-</li>
-<li><p>sigwaittest：测量信号在两个线程间传递的时延。主线程创建若干对儿子线程，一对儿子线程里一个不停发信号一个不停收信号，只要记录到发之前的时间和收到后的时间，就可计算出收发信号的时延。</p>
-</li>
-<li><p>svsematest：测量信号量PV操作的时延。主线程创建若干对儿子线程，一对儿子线程里一个不停执行V操作一个不停执行P操作，只要记录到V操作之前的时间和P操作之后的时间，就可计算出PV操作的时延。</p>
-</li>
-</ul>
-<p>线程还是进程？</p>
-<p>一些测试程序即可创建线程，又可以创建进程，这两者有什么区别呢？我想线程占用的资源更少，应优先使用线程。但如果有的内核不支持线程，也可创建进程对其测试。</p>
-
         
     </div>
     </div>
@@ -672,221 +522,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <h4 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h4><h5 id="numa"><a href="#numa" class="headerlink" title="numa"></a>numa</h5><p>Non-Uniform Memory Access，非一致性内存访问。</p>
-<p>numa出现之前，所有CPU共用一根总线访问内存(UMA，统一内存访问)。UMA的问题是随着CPU核数增加，访存效率下降。</p>
-<p>在numa架构里，有结点的概念。一个结点里包含了若干CPU和内存。结点内部访存快，结点外部访存慢，访存存在着本地和远程的区别。可以使用<code>numactl --hardware</code>命令查看系统中的numa结点。</p>
-<h5 id="smi"><a href="#smi" class="headerlink" title="smi"></a>smi</h5><p>System Management Interrupt，系统管理中断。</p>
-<p>这是硬件系统的中断，内核是看不到它的。</p>
-<p>外部设备通过SMI引脚来触发smi，软件也可以通过端口0xB2触发smi。</p>
-<h4 id="代码导读"><a href="#代码导读" class="headerlink" title="代码导读"></a>代码导读</h4><h5 id="选项相关变量"><a href="#选项相关变量" class="headerlink" title="选项相关变量"></a>选项相关变量</h5><p>是用户选项与源码之间的接口。大致相当于<code>process_options()</code>函数的解读。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -a选项, --affinity选项 */</span></span><br><span class="line">affinity_mask;		<span class="comment">// 如-a有参数，则通过parse_cpumask()设置</span></span><br><span class="line">setaffinity;	<span class="comment">// 如-a有参数则AFFINITY_SPECIFIED; 如-a无参数则AFFINITY_USEALL；默认值为AFFINITY_UNSPECIFIED。</span></span><br><span class="line">	<span class="comment">// AFFINITY_UNSPECIFIED - 用户没有设置亲和性，即用户不使用亲和性</span></span><br><span class="line">	<span class="comment">// AFFINITY_SPECIFIED - 用户指定了亲和性所对应的cpu核</span></span><br><span class="line">	<span class="comment">// AFFINITY_USEALL - 用户要使用亲和性，但没指定对应的cpu核，此时程序会给线程分配一个cpu核</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bitmask</span> &#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> size; <span class="comment">/* 掩码应包含多少位，其值等于max_cpus */</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *maskp;	<span class="comment">/* long整型的数组，掩码在整块数组的内存上依次排列 */</span></span><br><span class="line">&#125; *affinity_mask;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -A选项, --aligned选项。它与--secaligned选项是互斥的。 */</span></span><br><span class="line">aligned=<span class="number">1</span>;		<span class="comment">// 把线程的唤醒时间对齐到一个指定的offset。0无需对齐，1需要对齐。如不使用-A选项则默认为0。</span></span><br><span class="line">offset;			<span class="comment">// 如-A有参数，则为(参数*1000)；如-A无参数则为0。(因为参数的单位是微秒，而offset的单位是纳秒，所以要参数*1000)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* -b选项，--breaktrace选项 */</span></span><br><span class="line">tracelimit;		<span class="comment">// 意为追踪的限制条件。设置为参数的值，当时延大于设置的值时，则会发送break trace command，单位：微秒。默认值为0。</span></span><br><span class="line"><span class="comment">/* -B选项，--preemptirqs选项 */</span></span><br><span class="line">tracetype;</span><br><span class="line"><span class="comment">/* -c选项，--clock */</span></span><br><span class="line">clocksel;	<span class="comment">// 用于选择时钟。默认值为0。0:CLOCK_MONOTONIC,1:CLOCK_REALTIME。</span></span><br><span class="line"><span class="comment">/* -C选项, --context */</span></span><br><span class="line">tracetype;</span><br><span class="line"><span class="comment">/* -d选项, --distance */</span></span><br><span class="line">distance;	<span class="comment">// 线程interval之间的距离。单位微秒，默认值500(DEFAULT_DISTANCE)。</span></span><br><span class="line"><span class="comment">/* -D选项, --duration */</span></span><br><span class="line">duration;	<span class="comment">// 指定测试程序运行的时间，此变量的单位为秒。(用户输入的参数必须带单位，单位可以是m,h,d)。通过parse_time_string()函数解析用户输入的参数。此全局变量默认值为0。</span></span><br><span class="line"><span class="comment">/* -E选项, --event */</span></span><br><span class="line">enable_events=<span class="number">1</span>;</span><br><span class="line"><span class="comment">/* -f选项, --ftrace */</span></span><br><span class="line">tracetype=FUNCTION;</span><br><span class="line">ftrace=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -F选项, --fifo */</span></span><br><span class="line">use_fifo=<span class="number">1</span>;	<span class="comment">// 创建一个有名管道，把统计信息写入到它。0，不创建；1，创建。</span></span><br><span class="line">fifopath;	<span class="comment">// 有名管道的路径名，即用户输入的参数。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* -H选项, --histofall */</span></span><br><span class="line">histofall=<span class="number">1</span>;</span><br><span class="line"><span class="comment">/* -h选项, --histogram */</span></span><br><span class="line">histogram;	<span class="comment">// 代表了时延直方图里的最大时延。直接设为用户的参数，单位微秒。默认值为0，代表程序不会收集并输出时延的数据。如用户设置了此参数，则程序会收集时延数据，并在运行完成后把它输出到stdout。</span></span><br><span class="line"><span class="comment">/* --histfile */</span></span><br><span class="line">use_histfile=<span class="number">1</span>;</span><br><span class="line">histfile;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -i选项, --interval */</span></span><br><span class="line">interval;	<span class="comment">// 线程进行计时循环的基本间隔。设置为参数的值，单位：微秒。默认值：DEFAULT_INTERVAL(1000)。</span></span><br><span class="line"><span class="comment">/* -I选项, --irqsoff */</span></span><br><span class="line">tracetype;</span><br><span class="line">tracer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -l选项, --loops */</span></span><br><span class="line">max_cycles;		<span class="comment">// 用户设置的循环次数</span></span><br><span class="line"><span class="comment">/* -m选项, --mlockall */</span></span><br><span class="line">lockall;</span><br><span class="line"><span class="comment">/* -M选项, --refresh_on_max */</span></span><br><span class="line">refresh_on_max=<span class="number">1</span>;	<span class="comment">// 延迟更新屏幕，直到碰到一个新的最大时延。对于低带宽很有用。</span></span><br><span class="line"><span class="comment">/* -n选项, --nanosleep */</span></span><br><span class="line">use_nanosleep=MODE_CLOCK_NANOSLEEP;</span><br><span class="line"><span class="comment">/* -N选项, --nsecs */</span></span><br><span class="line">use_nsecs;</span><br><span class="line"><span class="comment">/* -o选项, --oscope */</span></span><br><span class="line">oscope_reduction;</span><br><span class="line"><span class="comment">/* -O选项，--traceopt, 使用traceopt()函数 */</span></span><br><span class="line">traceopt_size;</span><br><span class="line">traceptr;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -p选项, --priority */</span></span><br><span class="line">priority;</span><br><span class="line">policy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -P选项, --preemptoff */</span></span><br><span class="line">tracetype;</span><br><span class="line">tracer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -q选项, --quiet */</span></span><br><span class="line">quiet=<span class="number">1</span>;</span><br><span class="line"><span class="comment">/* -r选项，--relative */</span></span><br><span class="line">timermode=TIMER_RELTIME;	<span class="comment">// 设置计时器的模式为相对模式，即计时器在一个时间间隔到期；默认的模式是TIMER_ABSTIME，绝对模式，即计时器在一个绝对的时间到期。</span></span><br><span class="line"><span class="comment">/* -R选项, --resolution */</span></span><br><span class="line">check_clock_resolution=<span class="number">1</span>;</span><br><span class="line"><span class="comment">/* --secaligned选项。它与-A选项是互斥的。 */</span></span><br><span class="line">secaligned=<span class="number">1</span>;	<span class="comment">// 把线程的唤醒时间对齐到一个完整的秒，加上可选的offset</span></span><br><span class="line">offset;		<span class="comment">// 参数*1000。(因为参数的单位是微秒，而offset的单位是纳秒，所以要参数*1000)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* -s选项, --system */</span></span><br><span class="line">use_system = MODE_SYS_OFFSET;</span><br><span class="line"><span class="comment">/* -S选项, --smp */</span></span><br><span class="line">smp = <span class="number">1</span>;	<span class="comment">// </span></span><br><span class="line">num_threads = max_cpus;</span><br><span class="line">setaffinity = AFFINITY_USEALL;</span><br><span class="line">use_nanosleep = MODE_CLOCK_NANOSLEEP;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -t选项, --threads */</span></span><br><span class="line">num_threads;	<span class="comment">// 要创建的线程数。如用户没有指定，则为CPU的核数。如没有使用-t选项，则线程数为1。</span></span><br><span class="line"><span class="comment">/* --spike */</span></span><br><span class="line">trigger;	<span class="comment">// 峰值触发器的值，单位为微秒。当峰值大于触发器的值，则将相关参数记录到一个链表里。默认值为0，意为不进行记录。</span></span><br><span class="line"><span class="comment">/* 链表里的元素就是这个结构体 */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_trigger</span> &#123;</span></span><br><span class="line">        <span class="type">int</span> cpu;</span><br><span class="line">        <span class="type">int</span> tnum;       <span class="comment">/* thread number */</span></span><br><span class="line">        <span class="type">int64_t</span>  ts;    <span class="comment">/* time-stamp */</span></span><br><span class="line">        <span class="type">int</span> diff;		<span class="comment">/* 峰值本身 */</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">thread_trigger</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* --spike-nodes */</span></span><br><span class="line">trigger_list_size;	<span class="comment">// 峰值(spike)是保存在一个链表里的，这个全局变量保存了链表的元素个数。只有定义了trigger这个变量才有意义。</span></span><br><span class="line"><span class="comment">/* -T选项, --tracer */</span></span><br><span class="line">tracetype = CUSTOM;</span><br><span class="line">tracer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* -u选项, --unbuffered */</span></span><br><span class="line">setvbuf();	<span class="comment">// 让stdout不关联到缓冲区</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* -U选项, --numa */</span></span><br><span class="line"><span class="comment">// 注：需在构建的时候使用numa选项，此选项才有用。</span></span><br><span class="line">numa = <span class="number">1</span>;	<span class="comment">// 0表示不支持numa；1表示支持numa。默认为0。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* -v选项, --verbose */</span></span><br><span class="line">verbose = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* -w选项, --wakeup */</span></span><br><span class="line">tracetype = WAKEUP;</span><br><span class="line"><span class="comment">/* -W选项, --wakeuprt */</span></span><br><span class="line">tracetype = WAKEUPRT;</span><br><span class="line"><span class="comment">/* ?选项, --help */</span></span><br><span class="line">display_help(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* --priospread */</span></span><br><span class="line">priospread = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* --latency */</span></span><br><span class="line">latency_target_value;</span><br><span class="line"><span class="comment">/* --notrace */</span></span><br><span class="line">notrace = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* --policy，使用handlepolicy()函数 */</span></span><br><span class="line">policy；</span><br><span class="line"><span class="comment">/* --dbg_cyclictest */</span></span><br><span class="line">ct_debug = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* --laptop */</span></span><br><span class="line">laptop = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* --smi */</span></span><br><span class="line">smi = <span class="number">1</span>;	<span class="comment">// 需设置ARCH_HAS_SMI_COUNTER，且使用--smi选项，才为1，表示开启smi计数；否则为0，表示不开启smi计数。</span></span><br><span class="line"><span class="comment">/* --tracemark */</span></span><br><span class="line">notrace = <span class="number">1</span>; <span class="comment">/* using --tracemark implies --notrace */</span></span><br><span class="line">trace_marker = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 其它与选项相关的全局变量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">pthread_barrier_t</span> align_barr;</span><br><span class="line">	<span class="comment">// 如设置了aligned或secaligned，则调用pthread_barrier_init()初始化此屏障。</span></span><br><span class="line">tatic <span class="type">pthread_barrier_t</span> globalt_barr;</span><br><span class="line">	<span class="comment">// 如设置了aligned或secaligned，则调用pthread_barrier_init()初始化此屏障。意为全局变量globalt的屏障。globalt的意思是全局的时间。</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="关键数据结构"><a href="#关键数据结构" class="headerlink" title="关键数据结构"></a>关键数据结构</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Struct to transfer parameters to the thread */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_param</span> &#123;</span></span><br><span class="line">	<span class="type">int</span> prio;	<span class="comment">// 线程的优先级</span></span><br><span class="line">	<span class="type">int</span> policy;	<span class="comment">// 线程的调度算法</span></span><br><span class="line">	<span class="type">int</span> mode;	<span class="comment">// mode=use_nanosleep+use_system;</span></span><br><span class="line">    		<span class="comment">// MODE_CYCLIC : 0, 使用进程自己的计时器，通过信号等待。0+0</span></span><br><span class="line">    		<span class="comment">// MODE_SYS_ITIMER : 2, 使用系统的计时器，通过信号等待。0+2</span></span><br><span class="line">    		<span class="comment">// MODE_CLOCK_NANOSLEEP : 1,使用进程的计时器，通过睡眠等待。1+0</span></span><br><span class="line">    		<span class="comment">// MODE_SYS_NANOSLEEP : 3,使用系统的计时器，通过睡眠等待。1+2</span></span><br><span class="line">    		<span class="comment">// MODE_SYS_OFFSET : 2,表示这个位移是关于系统时钟的。仅用于计算，不作为mode可取的值。</span></span><br><span class="line">	<span class="type">int</span> timermode;	<span class="comment">// 计时器的模式。</span></span><br><span class="line">    		<span class="comment">// TIMER_ABSTIME : 计时器在一个绝对时间到期</span></span><br><span class="line">    		<span class="comment">// TIMER_RELTIME : 0, 计时器在一个时间间隔到期</span></span><br><span class="line">	<span class="type">int</span> signal;	<span class="comment">// 当计时器超时的时候给当前线程发的信号。主线程把它设置为SIGALRM</span></span><br><span class="line">	<span class="type">int</span> clock;	<span class="comment">// 当前线程所用的时钟类型。</span></span><br><span class="line">    		<span class="comment">// CLOCK_MONOTONIC - 记录单调时间的时钟，即系统启动到现在的秒数。</span></span><br><span class="line">    		<span class="comment">// CLOCK_REALTIME - 系统范围的时钟，用于测量真实时间。</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> max_cycles;	<span class="comment">// 用户设置的循环次数，等于全局变量max_cycles的值。</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">thread_stat</span> *<span class="title">stats</span>;</span></span><br><span class="line">	<span class="type">int</span> bufmsk;	<span class="comment">// 缓冲区stat-&gt;values和stat-&gt;smis的掩码，即二进制全为1的数。</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> interval;</span><br><span class="line">	<span class="type">int</span> cpu;	<span class="comment">// 与亲和性关联的cpu编号。-1，无亲和性。其它整数，线程与此cpu有亲和性。</span></span><br><span class="line">	<span class="type">int</span> node;	<span class="comment">// numa结点。-1表示不使用numa结点。</span></span><br><span class="line">	<span class="type">int</span> tnum;	<span class="comment">// 线程的编号。创建线程用的for循环，即for循环的次数，从0开始。</span></span><br><span class="line">	<span class="type">int</span> msr_fd;	<span class="comment">// msi相关</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Struct for statistics */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_stat</span> &#123;</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> cycles;	<span class="comment">// 记录线程执行了多少次计时循环</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> cyclesread;</span><br><span class="line">	<span class="type">long</span> min;		<span class="comment">// 线程等待的最小值。单位：微秒。</span></span><br><span class="line">	<span class="type">long</span> max;		<span class="comment">// 线程等待的最大值。单位：微秒。</span></span><br><span class="line">	<span class="type">long</span> act;		<span class="comment">// 线程等待的实际值。单位：微秒。</span></span><br><span class="line">	<span class="type">double</span> avg;		<span class="comment">// 线程等待的平均值。单位：微秒。</span></span><br><span class="line">	<span class="type">long</span> *values;	<span class="comment">// 一个缓冲区，用于记录当前线程所有diff的值。</span></span><br><span class="line">	<span class="type">long</span> *smis;		<span class="comment">// 一个缓冲区，用于记录当前线程所有diff_smi的值。</span></span><br><span class="line">	<span class="type">long</span> *hist_array;	<span class="comment">// 代表时延直方图的数组。数组的元素数即为用户设置的全局变量histogram的值，每个元素都是long类型。</span></span><br><span class="line">	<span class="type">long</span> *outliers;	<span class="comment">// 一个数组，记录了时延直方图溢出时stat-&gt;cycles的值</span></span><br><span class="line">	<span class="type">pthread_t</span> thread;</span><br><span class="line">	<span class="type">int</span> threadstarted;	<span class="comment">// 线程是否启动的标志。-1已关闭，&gt;0已启动。</span></span><br><span class="line">	<span class="type">int</span> tid;		<span class="comment">// 内核里的线程id</span></span><br><span class="line">	<span class="type">long</span> reduce;</span><br><span class="line">	<span class="type">long</span> redmax;</span><br><span class="line">	<span class="type">long</span> cycleofmax;</span><br><span class="line">	<span class="type">long</span> hist_overflow;	<span class="comment">// 溢出时延直方图的时延的数量</span></span><br><span class="line">	<span class="type">long</span> num_outliers;	<span class="comment">// 数组stat-&gt;outliers的下标，它的意思里这个数组里记录了多少个元素。</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> smi_count;	<span class="comment">// 系统管理中断的次数</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="main函数流程"><a href="#main函数流程" class="headerlink" title="main函数流程"></a>main函数流程</h5><ol>
-<li><p><code>process_options()</code>处理参数。</p>
-</li>
-<li><p><code>check_privs()</code>检查当前进程调度算法是否是实时的，或可切换为实时的。</p>
-</li>
-<li><p>如设置了<code>trigger</code>，则调用<code>trigger_init()</code>初始化单向链表<code>head</code>。</p>
-<ol>
-<li><p>此链表的元素为<code>struct thread_trigger</code>。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Info to store when the diff is greater than the trigger */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_trigger</span> &#123;</span></span><br><span class="line">	<span class="type">int</span> cpu;</span><br><span class="line">	<span class="type">int</span> tnum;	<span class="comment">/* 线程的编号 */</span></span><br><span class="line">	<span class="type">int64_t</span>  ts;	<span class="comment">/* time-stamp */</span></span><br><span class="line">	<span class="type">int</span> diff;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">thread_trigger</span> *<span class="title">next</span>;</span>	<span class="comment">// 下一个元素的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>此链表第一个元素的指针为head，最后一个元素的指针为tail。</p>
-</li>
-<li><p>current用来指向链表上需要被更新的元素。</p>
-</li>
-<li><p>此链表增加元素采用后插法。</p>
-</li>
-</ol>
-</li>
-<li><p>如设置了<code>lockall</code>，则调用<code>mlockall(MCL_CURRENT|MCL_FUTURE)</code>。</p>
-</li>
-<li><p>调用<code>set_latency_target()</code>设置电源管理系统，这是为了降低时延。</p>
-<ol>
-<li><code>/dev/cpu_dma_latency</code>要存在。</li>
-<li>把0写入文件<code>/dev/cpu_dma_latency</code>。效果为告诉电源管理系统不要切换到高cstate。当文件关闭后，电源管理器的行为将切换回系统默认的状态。目的是为了阻止CPU进入低功耗状态。详见<code>Documentation/power/pm_qos_interface.txt</code>。</li>
-</ol>
-</li>
-<li><p>调用<code>check_kernel()</code>检查内核信息。</p>
-<ol>
-<li>使用<code>uname()</code>获取内核信息，保存在<code>struct utsname kname</code>。</li>
-<li>把<code>kname.release</code>的信息分别保存在<code>maj</code>, <code>min</code>, <code>sub</code>里。</li>
-<li>使用上步三个变量控制<code>kv</code>、<code>functiontracer</code>、<code>traceroptions</code>的值。</li>
-<li>返回<code>kv</code>的值。</li>
-</ol>
-</li>
-<li><p>调用<code>setup_tracer()</code>来设置tracer。</p>
-<ol>
-<li>执行<code>debugfs_prepare()</code>设置fileprefix，即debugfs的目录名。</li>
-<li>由于现代内核都大于2.6.28，故只看if分支的代码。</li>
-<li>如果debugfs里tracing_enabled文件存在且tracing_on文件不存在，则向tracing_enabled文件里写入1。</li>
-<li>如果设置了tracetype，则向ftrace_enabled写入1，否则写入0。</li>
-<li>使用<code>settracer(&quot;nop&quot;)</code>把”nop”写入current_tracer文件。</li>
-<li>在一个switch分支里依据tracetype的值，把相应的tracer写入current_tracer文件。</li>
-<li>如设置了enable_events，则调用<code>event_enable_all()</code>把1写入debugfs里的events&#x2F;enable文件。</li>
-<li>向traceroptions文件里写入一些tracer。</li>
-<li>如设置了traceopt_count，则向traceroptions文件写入traceptr数组里的指针元素。</li>
-<li>向tracing_max_latency文件里写入0。</li>
-<li>如latency_hist目录存在，则向latency_hist&#x2F;wakeup&#x2F;reset文件写入1。</li>
-<li>如trace_fd&#x3D;&#x3D;-1，则给trace_fd赋值，如tracing_on存在它对应的文件就是tracing_on，否则它对应的文件是tracing_enable。</li>
-<li>调用<code>opentracemark_fd()</code>给tracemark_fd赋值。</li>
-<li>跳过else分支不进行分析，因为现代内核一定大于2.6.28。</li>
-<li>调用<code>tracing(1)</code>向trace_fd里写入1。</li>
-</ol>
-</li>
-<li><p>调用<code>enable_trace_mark()</code>打开debugfs下的文件trace_marker。</p>
-<ol>
-<li>执行<code>debugfs_prepare()</code>挂载debugfs并把它的路径名赋值给fileprefix。</li>
-<li>执行<code>open_tracemark_fd()</code>打开debugfs下的文件trace_marker。</li>
-</ol>
-</li>
-<li><p>执行<code>check_timer()</code>检查时钟的精度。</p>
-</li>
-<li><p>如果设置了check_clock_resolution则开始检查时钟的精度。目的是看报告时钟精度不能高于测量时钟精度。</p>
-<ol>
-<li>获取时钟精度，将reported_resolution设置为ns表示的精度。</li>
-<li>计算1ms可以调用clock_gettime()多少次，将这个结果保存在times里，如少于1000次按1000次算，如大于100000次按100000次算。</li>
-<li>time是一个以<code>struct timespec</code>为元素的数组，数组大小为times，调用clock_gettime()在一个for循环里把time数组填满。</li>
-<li>在一个for循环里，用min_non_zero_diff记录下数组time里相邻元素之间的最小差值(这个最小差值不能为0)。这个值即为测量到的时钟精度。</li>
-<li>测量时钟精度不能高于报告时钟精度，否则需输出warn信息。</li>
-</ol>
-</li>
-<li><p>设置mode，如选项里有-n则use_nanosleep&#x3D;0B01，如选项里有-s则use_system&#x3D;0B10。</p>
-</li>
-<li><p>把信号SIGALRM加到信号屏蔽字上。</p>
-</li>
-<li><p>调用signal()让sighand()处理信号SIGINT, SIGTERM, SIGUSR1。</p>
-<ol>
-<li>如信号是SIGUSR1，则向stderr输出错误信号，然后返回。</li>
-<li>如是其它两个信号，则shutdown置1。</li>
-<li>如定义了refresh_on_max，则唤醒一个等待在PTHREAD_COND_INITIALIZER上的线程。</li>
-<li>如定义了tracelimit，则向trace_fd文件写入”0”。</li>
-</ol>
-</li>
-<li><p>为两个关键的数组分配内存。数组parameters包含了每个线程的参数，数组statistics包含了每个线程的统计信息。</p>
-</li>
-<li><p>在一个for循环里创建子线程：</p>
-<ol>
-<li>使用pthread_attr_init()初始化attr。</li>
-<li>依据setaffinity的值设置cpu的值。</li>
-<li>一般不会编译numa参数，忽略if分支。</li>
-<li>为parameters[i]分配内存并将内存初始化为0。</li>
-<li>为statistics[i]分配内存并将内存初始化为0。</li>
-<li>如设置了histogram，则为statistics[i]里关于直方图的字段分配内存并初始化为0。</li>
-<li>如设置了verbose，则为<code>statistics[i]-&gt;value</code>分配内存，并设置好它的掩码<code>par-&gt;bufmsk</code>。</li>
-<li>初始化parameters[i]和statistics[i]的相关字段。一般来说，都是根据用户的输入直接赋值。但要注意的是，如果没有设置histogram，每个线程par-&gt;interval的值会相差distance。</li>
-<li>使用pthread_create()创建线程，线程代码为timerthread，线程参数为parameters[i]。</li>
-</ol>
-</li>
-<li><p>如定义了use_fifo，则创建子线程，子线程的代码为fifothread。</p>
-</li>
-<li><p>如没有设置shutdown，则进入无限循环中：</p>
-<ol>
-<li>执行policyname()，读取整型的policy，返回对应的字符串到policystr。</li>
-<li>如设置了force_sched_other，则slash&#x3D;”&#x2F;“、policystr2&#x3D;”other”，否则slash和policystr2都是空串</li>
-<li>如果verbose和quiet都没设置，则打印policy和loadavg的值。</li>
-<li>在一个for循环里打印每个线程的状态，如线程的循环次数达到了用户设定的次数，则allstopped++</li>
-<li>调用usleep()睡眠10000ms，即10s。</li>
-<li>如设置了shutdown或allstopped，则退出此循环。</li>
-<li>如设置了refresh_on_max，则执行pthread_cond_wait()睡眠，等待子线程通过<code>pthread_cond_signal()</code>唤醒自己。</li>
-</ol>
-</li>
-<li><p>设置ret为EXIT_SUCCESS。</p>
-</li>
-<li><p>outall标志。除了顺序执行可到此处外，在创建线程的for循环里，如果设置了verbose，则会给<code>statistic[i]-&gt;values</code>和<code>statistic[i]-&gt;smis</code>分配内存，如果内存分配失败也会跳转到outall标志。</p>
-<ol>
-<li>将shutdown置位。</li>
-<li>调用usleep()睡眠50000ms，即50s。</li>
-<li>如设置了quiet，则将quiet置2。</li>
-<li>在一个for循环里确保所有的线程都已退出。</li>
-<li>如设置了trigger，则调用trigger_print()打印出结构体<code>thread_trigger</code>存储的信息。</li>
-<li>如设置了histogram，则打印相关数据并释放<code>statistics[i]-&gt;hist_arry</code>和<code>statistics[i]-&gt;outliers</code>指向的内存。</li>
-<li>如果设置了tracelimit。则打印出所有线程的tid。</li>
-<li>在一个for循环里释放所有<code>statistics[i]</code>占用的空间。</li>
-</ol>
-</li>
-<li><p>outpar标志。除了顺序执行可到此处外，在主线程里如果给statistics分配内存的时候失败，也会跳转到outpar标志。本标志的代码是用for循环释放所有的<code>parameters[i]</code>的内存。</p>
-</li>
-<li><p>out标志。除了顺序执行可到此处外，如果设置了lockall但<code>mlockall()</code>执行失败的时候，或如果给<code>parameters</code>分配内存失败的时候，也会跳转到此处。</p>
-<ol>
-<li>如设置了tracelimit，则调用tracing(0)给文件<code>trace_fd</code>写入0，以确保触发器已关闭。</li>
-<li>如tracemark_fd和trace_fd还没有关闭，则调用<code>close()</code>关闭之。</li>
-<li>如设置了enable_events，则调用<code>event_disable_all()</code>向文件events&#x2F;enable写入0。</li>
-<li>如果设置了tracetype但没有设置notrace，则调用<code>setkernvar</code>向文件ftrace_enabled写入0。</li>
-<li>如果设置了lockall则调用<code>munlockall()</code>解除内存的锁定。</li>
-<li>现代内核版本都高于2.6.28了，不考虑此if分支。</li>
-<li>如果&#x2F;dev&#x2F;cpu_dma_latency还是打开状态，则关闭之。</li>
-<li>如果affinity_mask非NULL，则调用<code>rt_bitmask_free()</code>释放它指向的内存。</li>
-<li>调用<code>exit()</code>返回ret。</li>
-</ol>
-</li>
-</ol>
-<h5 id="timerthread线程"><a href="#timerthread线程" class="headerlink" title="timerthread线程"></a>timerthread线程</h5><ol>
-<li><p>如果par-&gt;node&#x3D;&#x3D;-1，则不进行numa相关的设置。</p>
-</li>
-<li><p>如par-&gt;cpu&#x3D;&#x3D;-1，则用户没有设置亲和性，直接跳过if分支；否则，通过<code>pthread_setaffinity_np()</code>设置当前线程的亲和性。</p>
-</li>
-<li><p>把<code>par-&gt;interval</code>写入到<code>interval</code>。</p>
-</li>
-<li><p>通过<code>gettid()</code>设置<code>stat-&gt;tid</code>。</p>
-</li>
-<li><p>把<code>par-&gt;signal</code>添加进当前线程的信号屏蔽字。</p>
-</li>
-<li><p>如果<code>par-&gt;mode==MODE_CYCLIC</code>，则创建一个计时器，当计时器超时的时候会向当前线程发信号<code>par-&gt;signal</code>。并将interval记录在<code>tspec.it_interval</code>。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* POSIX.1b structure for timer start values and intervals.  */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">itimerspec</span>  &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">it_interval</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">it_value</span>;</span></span><br><span class="line">&#125; tspec;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用setscheduler()设置当前线程的调度算法和优先级。</p>
-</li>
-<li><p>暂忽略设置smi后要执行的if分支。</p>
-</li>
-<li><p>如果设置了aligned或secaligned，即线程唤醒的时候在时间上对齐，则执行if分支。</p>
-<ol>
-<li>调用<code>pthread_barrier_wait()</code>让所有线程都到达<code>globalt_barr</code>再执行。</li>
-<li>在<code>globalt_barr</code>和<code>align_barr</code>两个内存屏障之间：如果线程编号为0，即<code>par-&gt;tnum==0</code>，则调用<code>clock_gettime()</code>把<code>par-&gt;clock</code>的时间记录在<code>globalt</code>里。更进一步地，如果设置的是<code>secaligned==1</code>，则意味着要按秒对齐，则需进一步调整<code>blobalt</code>。</li>
-<li>调用<code>pthread_barrier_wait()</code>让所有线程都到达<code>align_barr</code>再执行。</li>
-<li>所有线程都把0号线程记录下的<code>globalt</code>时间记录在变量<code>now</code>中。</li>
-<li>如果设置了offset，则须把offset的时间加到now上。</li>
-</ol>
-</li>
-<li><p>如果即没有设置aligned，也没有设置secaligned，则走else分支，调用<code>clock_gettime()</code>把<code>par-&gt;clock</code>的时间记录到<code>now</code>里。</p>
-</li>
-<li><p>用<code>next</code>记录<code>now + interval</code>的时间。它代表了线程下次过期的绝对时间。</p>
-</li>
-<li><p>如果设置了<code>duration</code>，则用<code>stop</code>记录<code>now + duration</code>的时间。</p>
-</li>
-<li><p>如果<code>par-&gt;mode == MODE_CYCLIC</code>，则用<code>timer_settime()</code>启动进程的计时器。</p>
-</li>
-<li><p>如果<code>par-&gt;mode == MODE_SYS_ITIMER</code>，则用<code>setitimer()</code>启动系统的计时器。</p>
-</li>
-<li><p>执行<code>stat-&gt;threadstarted++</code>表示线程已启动。</p>
-</li>
-<li><p>当<code>shutdown</code>还没有置1的时候，不停进行while循环：</p>
-<ol>
-<li>依据par-&gt;mode的值，设置等待的方式。MODE_CYCLIC和MODE_SYS_ITIMER是通过信号等；MODE_CLOCK_NANOSLEEP是进程计时器，通过睡眠等；MODE_SYS_NANOSLEEP是系统计时器，通过睡眠等。</li>
-<li>调用<code>clock_gettime()</code>让<code>now</code>记录时间。</li>
-<li>如设置了<code>smi</code>，则用<code>stat-&gt;smi_count</code>记录系统管理中断的次数。</li>
-<li>用<code>diff</code>记录<code>now - next</code>的值。</li>
-<li>分别用<code>stat-&gt;min</code>和<code>stat-&gt;max</code>记录<code>diff</code>的最小值和最大值。如产生了新的最大值且设置了<code>refresh_on_max</code>，则执行<code>pthread_cond_signal()</code>唤醒睡眠中的主线程。</li>
-<li>用<code>stat-&gt;avg</code>记录<code>diff</code>的累加和。</li>
-<li>如设置了trigger且<code>diff &gt; trigger</code>，则执行<code>trigger_update()</code>给结构体<code>current</code>的相关字段赋值，<code>current</code>会自己转移到链表里的下个元素。</li>
-<li>如果用户设置了程序运行时间duration，且已经达到了用户指定的时间now - stop &gt;&#x3D; 0，则shutdown++，意为可以关闭程序了。</li>
-<li><code>stopped</code>变量是线程是否停止的标志，0表示没有停止，1表示停止。当线程没有停止的时候，如果用户设置了追踪的限制时间tracelimit且diff &gt; tracelimit，则表示进程应在当前线程停止，则会标记相关的变量和文件。</li>
-<li>用<code>stat-&gt;act</code>记录当前<code>diff</code>的值。</li>
-<li>如用户分配了缓冲区<code>stat-&gt;values</code>或<code>stat-&gt;smis</code>，则它们的掩码<code>par-&gt;bufmsk</code>非0，此会把每个diff都记录到缓冲区里。如果diff的数量超过缓冲区的大小，则会覆盖之前的记录。</li>
-<li>如设置了<code>histogram</code>，则向代表直方图的数组里记录相应的数据。</li>
-<li><code>stat-&gt;cycles++;</code></li>
-<li>next +&#x3D; interval；如果是在MODE_CYCLIC模式，可能因为信号或线程而溢出了多次，这些也都需要一并计算进去。</li>
-<li>如果now &gt; next，则next +&#x3D; interval。</li>
-<li>如果用户设置了循环次数par-&gt;max_cycles，且当前线程执行了这么多次的循环，则退出当前的while循环。</li>
-</ol>
-</li>
-<li><p>out标志，用于释放相关的资源。</p>
-</li>
-</ol>
-
         
     </div>
     </div>

@@ -142,14 +142,7 @@ class="article article-type-post"
     </header>
     <div class="article-entry post-inner-html">
         
-        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述xv6的锁。锁不是操作系统的某个子系统，感觉它更像一个工具，是给并发加上了镣铐。在请求锁<code>acquire()</code>和释放锁<code>release()</code>之间的代码是临界区(critical section)，以前以为临界区是个空间的概念，现在看来临界区也是时间的概念。因为在持有锁的这段时间并没有说不能做什么事情，只是大家都在这个时间段里保护某个数据结构的不变性而已。</p>
-<h4 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h4><p>自旋锁的核心数据结构是<code>struct spinlock</code>，核心操作是<code>acquire()</code>和<code>release()</code>，它们定义在<code>kernel</code>目录下的<code>spinlock.h</code>和<code>spinlock.c</code>。</p>
-<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p><code>acquire()</code>用一个<code>while</code>循环来请求锁，它一直在这个<code>while</code>上自旋直到获得锁。获得锁的方式是用builtin函数<code>__sync_lock_test_and_set</code>，这个函数使用原子指令<code>amoswap</code>使锁的值变为1。<code>release()</code>使用<code>__sync_lock_release</code>来释放锁，这个函数最终也使用了<code>amoswap</code>指令。</p>
-<p>自旋锁是要一直死等的，它的代价挺大的，感觉还是能不用尽量不用的好。必须要用的时候，应使临界区尽量地小。且被保护的数据结构在所有的地方都要加自旋锁，否则就失去了保护的意义。</p>
-<p>当自旋锁之间存在次序的关系时，所有的代码都必须遵循同样的次序来持有和释放锁。</p>
-<p>当在线程里使用锁的时候，如果发生中断，中断代码如请求同样的锁会发生死锁。所以，在请求锁的时候要禁止中断，在释放锁的时候再恢复中断。这就是<code>push_off</code>和<code>pop_off</code>做的事。</p>
-<p>编译器有的时候不按代码的次序安排指令，这对于锁来说是有害的，所以需要<code>__sync_synchronize</code>来建立内存屏障，使load和store指令不要跨屏障使用。</p>
-
+        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述xv6的锁。</p>
         
     </div>
     </div>
@@ -196,34 +189,7 @@ class="article article-type-post"
     </header>
     <div class="article-entry post-inner-html">
         
-        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的自陷管理系统。XV6把CPU跳出当前指令流转而执行其它代码的情况叫trap，看到有人把它翻译成<strong>自陷</strong>，感觉这么翻译还是比较准确的。自陷可分为三种情况：</p>
-<ul>
-<li>系统调用，使用<code>ecall</code>指令跳出当前代码流。</li>
-<li>异常，由于指令非法执行跳出当前代码流。</li>
-<li>设备中断，由于设备发出中断信号跳出当前代码流。</li>
-</ul>
-<h4 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h4><p>当xv6在启动的过程中，首先在机器模式下调用<code>timerinit</code>初始化了计时器中断，然后切换到管理员模式下，主控函数<code>main</code>调用了两个函数来完成自陷管理系统的初始化。</p>
-<ul>
-<li><code>trapinit</code>打个酱油。</li>
-<li><code>trapinithart</code>指定内核模式下的自陷处理例程。</li>
-</ul>
-<p>与自陷管理相关的文件有<code>kernel</code>目录下<code>start.c</code>、<code>trap.c</code>、<code>kernelvec.S</code>、<code>trampoline.S</code>。</p>
-<ul>
-<li><code>start.c</code>处理计时器中断(机器模式下)。</li>
-<li><code>trap.c</code>处理管理员模式和用户模式下的自陷。</li>
-<li><code>kernelvec.S</code>处理管理员模式下的自陷和机器模式下的计时器中断。</li>
-<li><code>trampoline.S</code>用户模式到管理员模式，以及管理员模式返回用户的跳板。</li>
-</ul>
-<h4 id="管理员模式下的自陷"><a href="#管理员模式下的自陷" class="headerlink" title="管理员模式下的自陷"></a>管理员模式下的自陷</h4><p>管理员模式下只可能发生两种自陷：异常和设备中断。</p>
-<p>当自陷发生，硬件会把<code>stvec</code>的值保存到<code>pc</code>，进而执行<code>stvec</code>所指向的地址。<code>stvec</code>里保存的是<code>kernelvec</code>的地址，所以自陷发生后执行<code>kernelvec</code>。<code>kernelvec</code>做的事是保存和恢复上下文，其它的工作交给C代码的<code>kerneltrap</code>来处理。<code>kerneltrap</code>做的事是排查异常情况，自陷处理工作交给<code>devinitr</code>来做。<code>scause</code>最高位为1说明是来自于中断，此时会判断中断的类型分别处理；否则，最高位就是0，说明来自于异常，此时不做任何处理直接返回0。</p>
-<h4 id="用户模式下的自陷"><a href="#用户模式下的自陷" class="headerlink" title="用户模式下的自陷"></a>用户模式下的自陷</h4><p>用户模式下三种自陷都有可能发生。</p>
-<p>当自陷发生，硬件从用户模式进入到管理员模式，此时<code>stvec</code>里保存的是<code>uservec</code>的地址(<strong>不知道什么时候把uservec写入到stvec的？</strong>)。<code>uservec</code>做的事是保存上下文，切换到内核栈和内核的页表，最后跳转到<code>usertrap</code>。<code>usertrap</code>做的事是依据自陷的类型，分发给不同的函数去处理，如果是系统调用则执行<code>syscall</code>，如果是外设中断则执行<code>devinitr</code>，如果是除系统调用外的其它异常则执行<code>exit</code>，如果没有执行<code>exit</code>则会调用<code>usertrapret</code>。<code>usertrapret</code>为下次用户空间的自陷做准备，最后切换到<code>userret</code>继续执行。<code>userret</code>切换到用户页表，恢复上下文，最后通过<code>sret</code>指令返回到用户模式。</p>
-<h4 id="计时器中断"><a href="#计时器中断" class="headerlink" title="计时器中断"></a>计时器中断</h4><p>运行于机器模式下的<code>timerinit</code>初始化了计时器中断。由于virtio机器的时钟频率是10MHz，所以<code>interval</code>设置为1M的意思就是每100ms产生一个计时器中断。<code>scratch[]</code>区域用来给<code>timervec</code>提供保存和恢复上下文的空间。<code>timervec</code>被保存在<code>mtvec</code>里，它的工作是处理计时器中断。<code>timervec</code>产生了一个管理员模式下的软件中断，这样就可以通过管理员模式下的自陷处理机制来管理计时器中断了。</p>
-<h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/mit-pdos/xv6-riscv-book">xv6-riscv-book Chapter 4</a></li>
-<li>riscv-privileged-v1.10</li>
-</ul>
-
+        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的自陷管理系统。</p>
         
     </div>
     </div>
@@ -271,32 +237,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的内存管理系统。</p>
-<h4 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h4><p>当xv6在启动的过程中，主控函数<code>main</code>调用了三个函数来完成内存管理系统的初始化。</p>
-<ul>
-<li><code>kinit</code>把空闲的物理内存以页为单位放到一个单向链表<code>kmem.freelist</code>里，这样就可以通过操作这个链表来管理物理页了。</li>
-<li><code>kvminit</code>是给物理页和虚拟页之间建立映射关系，这样就为开启分页做好了准备。</li>
-<li><code>kvminithart</code>用于开启分页。</li>
-</ul>
-<p>与内存管理相关的文件有<code>kernel</code>目录下<code>kalloc.c</code>、<code>vm.c</code>、<code>memlayout.h</code>。</p>
-<ul>
-<li><code>kalloc.c</code>的作用是进行物理内存管理，它的核心数据结构是<code>kmem.freelist</code>，它的核心函数是<code>kfree</code>和<code>kalloc</code>。</li>
-<li><code>vm.c</code>的作用是进行虚拟内存的管理，它的核心变量是<code>kernel_pagetable</code>，它的函数用于管理虚拟内存，即包括在管理员模式下，也包括在用户模式下。</li>
-<li><code>memlayout.h</code>的作用是描述物理内存的布局。其内容是一些重要的物理地址的宏定义。</li>
-</ul>
-<h4 id="虚拟内存到物理内存的映射"><a href="#虚拟内存到物理内存的映射" class="headerlink" title="虚拟内存到物理内存的映射"></a>虚拟内存到物理内存的映射</h4><p>RISC-V有三种映射方式，Sv32、Sv39、Sv48。它们区别仅在于映射的层级不一样，进而物理地址和虚拟地址的可表示范围不一样。其中Sv32是二级映射，Sv39是三级映射，Sv48是四级映射。</p>
-<p>虚拟地址和物理地址的页内偏移是相等的，所以，它们的大小的设计仅需考虑PTE。</p>
-<p>对于Sv32，每个PTE占用4个字节，所以页表对应了(4K&#x2F;4B)&#x3D;1024个PTE，所以每一级VPN需要占用10位，所以它的虚拟地址是10*2+12&#x3D;32位。由于高22位是PPN，所以物理地址是22+12&#x3D;34位。</p>
-<p>对于Sv39和Sv48，每个PTE占用8个字节，所以页表对应了(4K&#x2F;8B)&#x3D;512个PTE，所以每一级VPN需要占用9位。类似于Sv32的计算方式，可得它们的有效虚拟地址，Sv39是9*3+12&#x3D;39位，Sv48是9*4+12&#x3D;48位。它们的PPN都是44位，所以物理地址是44+12&#x3D;56位。</p>
-<h4 id="内核空间的映射"><a href="#内核空间的映射" class="headerlink" title="内核空间的映射"></a>内核空间的映射</h4><p>对于机器virtio来说，物理内存是从0x80000000开始计数的，物理内存前面的部分是MMIO。</p>
-<p>0~0x7FFFFFFF是MMIO，映射在虚拟内存相同的位置。</p>
-<p>0x80000000~0x80000000+128M，映射在虚拟内存相同的位置。</p>
-<p>trampoline页，用于内核空间和用户空间的切换，被映射在虚拟内存的顶部。</p>
-<p>内核栈，被映射在虚拟内存里trampoline页的下面。</p>
-<h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/mit-pdos/xv6-riscv-book">xv6-riscv-book Chapter 3</a></li>
-<li>riscv-privileged-v1.10</li>
-</ul>
-
         
     </div>
     </div>
@@ -344,11 +284,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <h4 id="大牛"><a href="#大牛" class="headerlink" title="大牛"></a>大牛</h4><p>大牛的特点是推动了社会的进步。他不再局限于自己的专业领域，而是广泛地涉猎世间的各种知识，以自己的专业知识弥补世界的不足。</p>
-<h4 id="半步大牛"><a href="#半步大牛" class="headerlink" title="半步大牛"></a>半步大牛</h4><p>半步大牛的特点是闭环极大的丰富。深入地理解Linux，LLVM，GCC，RISC-V。能设计并实现合理的三种系统：教学操作系统，教学处理器，教学编译器。</p>
-<h4 id="小牛"><a href="#小牛" class="headerlink" title="小牛"></a>小牛</h4><p>小牛的特点是在他的圈子里成为解决问题的人。小牛的知识已成闭环，所有的新知识都可以从他的闭环里衍生出来，所以他学东西很快，所有的问题都不出他的闭环，所以他总是能解决碰到的问题。</p>
-<h4 id="半步小牛"><a href="#半步小牛" class="headerlink" title="半步小牛"></a>半步小牛</h4><p>半步小牛的特点在知识上形成了闭环。如果知识没有形成闭环，就会最终滑坡回到起点。只有形成闭环的知识才是真正与自己凝聚为一，犹如攀登过程中上到一个平台，不会再降回起点。</p>
-<p>从知识结构上看，能彻底理解如下三个系统的结构和代码：一个教学的操作系统，如XV6；一个教学处理器，如sodor；一个教学的编译器。</p>
-
         
     </div>
     </div>
@@ -396,10 +331,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&#x2F;init.c。</p>
-<p>user&#x2F;init.c把文件sh放到内存里执行。文件sh编译自user&#x2F;sh.c，把用户输入的命令调入内存中执行，它就是xv6的shell。</p>
-<p>系统调用怎么从用户态到的内核态呢？文件user&#x2F;usys.pl生成user&#x2F;usys.S，usys.S就是用来完成从用户态到内核态的代码。从代码可见，它是通过ecall产生一个异常来进入内核态，在kernelvec处保存寄存器的上下文，调用kerneltrap，</p>
-<h4 id="进程和内存"><a href="#进程和内存" class="headerlink" title="进程和内存"></a>进程和内存</h4><h5 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h5><p>文件位置：kernel&#x2F;proc.c。作用：创建一个进程。</p>
-
         
     </div>
     </div>
@@ -447,18 +378,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>操作系统处在硬件和用户程序之间，所以它是对硬件的抽象。前一篇分析的printf函数是对uart的抽象，地址映射是对内存的抽象。本篇准备分析启动过程的其它部分，这些也都是对某种硬件的抽象。</p>
-<h4 id="一、-进程的初始化"><a href="#一、-进程的初始化" class="headerlink" title="一、 进程的初始化"></a>一、 进程的初始化</h4><p>procinit函数定义在kernel&#x2F;proc.c，它的作用是初始化进程表。个人认为进程就是对CPU的抽象，进程表就是这种抽象的表现形式。xv6对各种硬件进行抽象都有相同的套路：首先要有一个自旋锁，其次把相关数据结构都放在一个数组里，其它部分往往是对前述数组里元素的某种补充。对进程表初始化的核心功能就是为每个进程分配栈空间。最后，使用kvminithart函数刷新TLB，使分配给各个PCB的栈生效。</p>
-<h4 id="二、中断的初始化"><a href="#二、中断的初始化" class="headerlink" title="二、中断的初始化"></a>二、中断的初始化</h4><p>首先用trapinit函数初始化trap对应的锁。然后trapinithart函数向stvep寄存器写入kernelvec的地址，其中kernelvec是中断处理例程的入口。然后plicinit函数来使能硬件的中断，具体来说就是向PLIC的UART0和VIRTIO0中断使能位写入1。最后plicinithart函数来使能当前核接收中断。</p>
-<h4 id="三、文件系统的初始化"><a href="#三、文件系统的初始化" class="headerlink" title="三、文件系统的初始化"></a>三、文件系统的初始化</h4><p>首先用binit来初始化缓冲区缓存。然后用iinit来初始化inode缓存。然后用fileinit来初始化文件表。最后用virtio_disk_init函数初始化硬盘。</p>
-<h4 id="四、准备第一个用户进程"><a href="#四、准备第一个用户进程" class="headerlink" title="四、准备第一个用户进程"></a>四、准备第一个用户进程</h4><p>userinit函数在kernel&#x2F;proc.c，用于准备第一个用户进程。主要是为用户进程分配资源，并将其状态改为RUNNABLE。当内核开始调度的时候第一个用户进程就开始执行了。</p>
-<h4 id="五、多核调度"><a href="#五、多核调度" class="headerlink" title="五、多核调度"></a>五、多核调度</h4><p>每个核都会运行到scheduler函数，它用于多核调度。每个核干的事都是在所有进程里找状态为RUNNABLE的进程然后进行它。</p>
-<ul>
-<li>数组cpus[]的元素是cpu的数据结构，mcpu()返回的是当前cpu所对应的那个cpus[]里的元素。</li>
-<li>intr_on()使能当前核的中断。</li>
-<li>acquire和release分别用于锁的请求和释放。</li>
-<li>swtch用于切换上下文，“返回”用户态。</li>
-</ul>
-
         
     </div>
     </div>
@@ -506,40 +425,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</p>
-<h4 id="一、-运行前的准备"><a href="#一、-运行前的准备" class="headerlink" title="一、 运行前的准备"></a>一、 运行前的准备</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/mit-pdos/xv6-riscv.git	# 下载xv6源码</span><br><span class="line">sudo apt install gcc-8-riscv64-linux-gnu	# 安装编译工具</span><br><span class="line"># 需自行编译qemu,编译目标为riscv64-softmmu</span><br><span class="line">cd xv6-riscv</span><br><span class="line">vim Makefile	# 把第51行的&quot;CC = ...&quot;里的&quot;gcc&quot;改为&quot;gcc-8&quot;</span><br></pre></td></tr></table></figure>
-
-<h4 id="二、运行xv6"><a href="#二、运行xv6" class="headerlink" title="二、运行xv6"></a>二、运行xv6</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xv6-riscv</span><br><span class="line">make qemu </span><br></pre></td></tr></table></figure>
-
-<p>编译主要是生成kernel和fs.img两个文件。kernel是从kernel&#x2F;目录下的文件编译出来的，它是xv6的内核。fs.img是一个镜像文件，包含了一些用户态的程序，这些程序是从user&#x2F;目录编译出来的。这些用户态的程序，通过mkfs\目录下的mkfs.c生成的程序mkfs，放到fs.img里。</p>
-<h4 id="三、内核的入口"><a href="#三、内核的入口" class="headerlink" title="三、内核的入口"></a>三、内核的入口</h4><p>kernel&#x2F;kernel.ld是把内核链接起来的配置文件，在这个文件里指明了内核的入口是<code>_entry</code>。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENTRY( _entry )</span><br></pre></td></tr></table></figure>
-
-<p><code>_entry</code>在文件kernel&#x2F;entry.S，当前运行在机器态，这段代码的作用是为C代码的运行做准备，一旦做好准备就跳转到C代码的start函数开始执行。具体来看，它就是为每个核准备了4K大小的栈空间，这些栈的空间都在是kernel&#x2F;start.c函数里分配的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__attribute__ ((aligned (16))) char stack0[4096 * NCPU];</span><br></pre></td></tr></table></figure>
-
-<h4 id="四、跳转到C"><a href="#四、跳转到C" class="headerlink" title="四、跳转到C"></a>四、跳转到C</h4><p><code>start</code>函数在kernel&#x2F;start.c，它的作用是为进入S特权级做好准备，一旦准备完成就进入S态，从<code>main</code>函数开始执行。</p>
-<ul>
-<li>设置mstatus寄存器告诉它我们是从S态进入的，设置mepc寄存器告诉它我们在S态的进入点是main，这样在执行mret指令后处理器就会“返回”到S态，从main函数开始执行。</li>
-<li>设置satp寄存器为0是告诉处理器在进入S态后不开启分页。</li>
-<li>设置medeleg和mideleg，告诉它们在S态处理异常和中断。所有的处理都放在S态，这样提升了效率，降低了代码的复杂度。</li>
-<li>timerinit函数用来设置计时器中断。</li>
-<li>把当前核的编号放在tp寄存器里，这是为内核函数cpuid准备的。</li>
-<li>执行mret指令，跳转到S态。</li>
-</ul>
-<h4 id="五、内核的总控函数main"><a href="#五、内核的总控函数main" class="headerlink" title="五、内核的总控函数main"></a>五、内核的总控函数main</h4><p><code>main</code>函数在kernel&#x2F;main.c，处理器从这个函数开始进入了S态，这个函数是内核的总控函数，它完成了硬件及内核相关数据结构的初始化，最后以处理机调度的状态一直存在着。main函数之后，用户态的第一个进程开始执行了。</p>
-<h4 id="六、与外界交互"><a href="#六、与外界交互" class="headerlink" title="六、与外界交互"></a>六、与外界交互</h4><p><code>main</code>函数首先要做的事是与外界交互，这样才能看到内核运行的状况，方便定位问题。实现这个功能的函数是<code>consoleinit</code>, <code>printfinit</code>, <code>printf</code>。</p>
-<ul>
-<li>consoleinit是从硬件的层面初始化输入输出。首先，它初始化了控制台的锁cons.lock，这是为了避免多个核同时使用控制台引发输入输出的混乱。然后，初始化uart。最后，把consoleread和consolewrite连接到系统调用read和write。</li>
-<li>printfinit函数的作用是初始化printf函数的锁pr.lock，这也是为了避免多个核同时使用printf函数引发输入输出的混乱。</li>
-<li>printf函数依赖于consputc，consputc依赖于uartputc。可见，对uart的初始化是实现printf函数的基础。</li>
-</ul>
-<h4 id="七、内存的初始化"><a href="#七、内存的初始化" class="headerlink" title="七、内存的初始化"></a>七、内存的初始化</h4><p>内存的初始化就是建立虚拟内存和物理内存之间的映射关系。实现这个功能的函数是<code>kinit</code>, <code>kvminit</code>,<code>kvminithart</code>。</p>
-<ul>
-<li>kinit把空闲内存加到了一个单向链表freelist里，这样就可以通过链表freelist来管理这些空闲内存了。</li>
-<li>kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核&#x2F;用户空间切换的代码空间建立映射。</li>
-<li>kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。</li>
-</ul>
-
         
     </div>
     </div>
@@ -646,10 +531,6 @@ class="article article-type-post"
     <div class="article-entry post-inner-html">
         
         <p>本文是对《计算机组成与设计》第三章　“计算机的算术运算”　的理解。以RISC-V指令集为例。</p>
-<h4 id="加法与减法"><a href="#加法与减法" class="headerlink" title="加法与减法"></a>加法与减法</h4><p>有符号整数加减法溢出的条件：正数相加结果为负，负数相加结果为正，正数减负数结果为负，负数减正数结果为正。无符号整数由于经常表示内存地址，所以不对其进行溢出的判断。</p>
-<h4 id="乘法与除法"><a href="#乘法与除法" class="headerlink" title="乘法与除法"></a>乘法与除法</h4><p>乘法是加法与移位的混合，除法是减法与移位的混合。可以通过并行来加速乘法，可以通过查找表来加速除法。</p>
-<h4 id="浮点运算"><a href="#浮点运算" class="headerlink" title="浮点运算"></a>浮点运算</h4><p>浮点数的表示采用的是IEEE754标准，其运算是移位和定点运算的组合。</p>
-
         
     </div>
     </div>

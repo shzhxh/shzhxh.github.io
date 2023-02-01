@@ -8,7 +8,7 @@
     
     <title>创建子进程 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;p&gt;如何创建进程？&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "创建子进程 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;p&gt;如何创建进程？&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;p&gt;如何创建进程？&lt;/p&gt;" />
     <meta name="twitter:title" content="创建子进程 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;p&gt;如何创建进程？&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;p&gt;如何创建进程？&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fi0010bmon83x04ws8" class="article article-type-post" itemscope
+    <article id="post-cldleqo4f0010byohdscnf7sd" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,6 +181,8 @@
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
             <p>如何创建进程？</p>
+<span id="more"></span>
+
 <p>C语言在unistd.h定义了如下函数：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/* (char  *) NULL */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/* (char  *) NULL */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execle</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...</span></span><br><span class="line"><span class="params">                       <span class="comment">/*, (char *) NULL, char * const envp[] */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execv</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">char</span> *<span class="type">const</span> argv[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvp</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">char</span> *<span class="type">const</span> argv[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvpe</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *file, <span class="type">char</span> *<span class="type">const</span> argv[],</span></span><br><span class="line"><span class="params">                       <span class="type">char</span> *<span class="type">const</span> envp[])</span>;</span><br></pre></td></tr></table></figure>
 

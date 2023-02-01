@@ -8,7 +8,7 @@
     
     <title>XV6的自陷管理 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述XV6的自陷管理系统。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "XV6的自陷管理 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述XV6的自陷管理系统。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2020/04/18/xv6%E7%9A%84%E8%87%AA%E9%99%B7/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述XV6的自陷管理系统。&lt;/p&gt;" />
     <meta name="twitter:title" content="XV6的自陷管理 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述XV6的自陷管理系统。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述XV6的自陷管理系统。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2020/04/18/xv6%E7%9A%84%E8%87%AA%E9%99%B7/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fe000sbmon8wlla9jw" class="article article-type-post" itemscope
+    <article id="post-cldleqo4c000sbyohhengd90r" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -180,7 +180,10 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的自陷管理系统。XV6把CPU跳出当前指令流转而执行其它代码的情况叫trap，看到有人把它翻译成<strong>自陷</strong>，感觉这么翻译还是比较准确的。自陷可分为三种情况：</p>
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的自陷管理系统。</p>
+<span id="more"></span>
+
+<p>XV6把CPU跳出当前指令流转而执行其它代码的情况叫trap，看到有人把它翻译成<strong>自陷</strong>，感觉这么翻译还是比较准确的。自陷可分为三种情况：</p>
 <ul>
 <li>系统调用，使用<code>ecall</code>指令跳出当前代码流。</li>
 <li>异常，由于指令非法执行跳出当前代码流。</li>

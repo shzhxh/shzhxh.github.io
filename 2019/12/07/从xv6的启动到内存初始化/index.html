@@ -8,7 +8,7 @@
     
     <title>从xv6的启动到内存初始化 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "从xv6的启动到内存初始化 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;" />
     <meta name="twitter:title" content="从xv6的启动到内存初始化 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;p&gt;这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fh000xbmonexsg8sqk" class="article article-type-post" itemscope
+    <article id="post-cldleqo4e000xbyohdqwvgrh6" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,6 +181,8 @@
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
             <p>这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</p>
+<span id="more"></span>
+
 <h4 id="一、-运行前的准备"><a href="#一、-运行前的准备" class="headerlink" title="一、 运行前的准备"></a>一、 运行前的准备</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/mit-pdos/xv6-riscv.git	# 下载xv6源码</span><br><span class="line">sudo apt install gcc-8-riscv64-linux-gnu	# 安装编译工具</span><br><span class="line"># 需自行编译qemu,编译目标为riscv64-softmmu</span><br><span class="line">cd xv6-riscv</span><br><span class="line">vim Makefile	# 把第51行的&quot;CC = ...&quot;里的&quot;gcc&quot;改为&quot;gcc-8&quot;</span><br></pre></td></tr></table></figure>
 
 <h4 id="二、运行xv6"><a href="#二、运行xv6" class="headerlink" title="二、运行xv6"></a>二、运行xv6</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xv6-riscv</span><br><span class="line">make qemu </span><br></pre></td></tr></table></figure>

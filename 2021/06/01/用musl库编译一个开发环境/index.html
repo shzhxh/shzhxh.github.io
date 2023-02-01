@@ -8,7 +8,7 @@
     
     <title>用musl库编译一个开发环境 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;p&gt;参考了这位老哥&lt;a href=&#34;https://www.openwall.com/lists/musl/2014/08/08/13&#34;&gt;Tim Tassonis&lt;/a&gt;的文档，虽然是2014年写的，但并不过时。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "用musl库编译一个开发环境 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;p&gt;参考了这位老哥&lt;a href=&#34;https://www.openwall.com/lists/musl/2014/08/08/13&#34;&gt;Tim Tassonis&lt;/a&gt;的文档，虽然是2014年写的，但并不过时。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2021/06/01/%E7%94%A8musl%E5%BA%93%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;p&gt;参考了这位老哥&lt;a href=&#34;https://www.openwall.com/lists/musl/2014/08/08/13&#34;&gt;Tim Tassonis&lt;/a&gt;的文档，虽然是2014年写的，但并不过时。&lt;/p&gt;" />
     <meta name="twitter:title" content="用musl库编译一个开发环境 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;p&gt;参考了这位老哥&lt;a href=&#34;https://www.openwall.com/lists/musl/2014/08/08/13&#34;&gt;Tim Tassonis&lt;/a&gt;的文档，虽然是2014年写的，但并不过时。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;p&gt;参考了这位老哥&lt;a href=&#34;https://www.openwall.com/lists/musl/2014/08/08/13&#34;&gt;Tim Tassonis&lt;/a&gt;的文档，虽然是2014年写的，但并不过时。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2021/06/01/%E7%94%A8musl%E5%BA%93%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fn0019bmonekceas4f" class="article article-type-post" itemscope
+    <article id="post-cldleqo4j0019byoh5mqp3k5l" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,6 +181,8 @@
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
             <p>参考了这位老哥<a target="_blank" rel="noopener" href="https://www.openwall.com/lists/musl/2014/08/08/13">Tim Tassonis</a>的文档，虽然是2014年写的，但并不过时。</p>
+<span id="more"></span>
+
 <p>编译平台：运行于qemu-system-riscv64上的Debian</p>
 <p>编译环境的准备</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装必要的软件</span></span><br><span class="line">sudo apt install build-essentials</span><br><span class="line">sudo apt install musl-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># gcc是到gcc-10的链接，现在要让它变成musl-gcc的链接</span></span><br><span class="line"><span class="built_in">rm</span> /usr/bin/gcc	</span><br><span class="line"><span class="built_in">ln</span> -s /usr/bin/musl-gcc /usr/bin/gcc</span><br><span class="line"><span class="comment"># musl-gcc使用了cc，要让cc链接到正确的编译器gcc-10</span></span><br><span class="line"><span class="built_in">rm</span> /usr/bin/cc	</span><br><span class="line"><span class="built_in">ln</span> -s /usr/bin/gcc-10 /usr/bin/cc</span><br></pre></td></tr></table></figure>

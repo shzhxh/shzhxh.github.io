@@ -8,7 +8,7 @@
     
     <title>编译rt-linux与使用rt-tests | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;h3 id=&#34;1-rt-linux&#34;&gt;&lt;a href=&#34;#1-rt-linux&#34; class=&#34;headerlink&#34; title=&#34;1 rt-linux&#34;&gt;&lt;/a&gt;1 rt-linux&lt;/h3&gt;&lt;h4 id=&#34;1-1-下载内核与补丁&#34;&gt;&lt;a href=&#34;#1-1-下载内核与补丁&#34; class=&#34;headerlink&#34; title=&#34;1.1 下载内核与补丁&#34;&gt;&lt;/a&gt;1.1 下载内核与补丁&lt;/h4&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "编译rt-linux与使用rt-tests | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;h3 id=&#34;1-rt-linux&#34;&gt;&lt;a href=&#34;#1-rt-linux&#34; class=&#34;headerlink&#34; title=&#34;1 rt-linux&#34;&gt;&lt;/a&gt;1 rt-linux&lt;/h3&gt;&lt;h4 id=&#34;1-1-下载内核与补丁&#34;&gt;&lt;a href=&#34;#1-1-下载内核与补丁&#34; class=&#34;headerlink&#34; title=&#34;1.1 下载内核与补丁&#34;&gt;&lt;/a&gt;1.1 下载内核与补丁&lt;/h4&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;h3 id=&#34;1-rt-linux&#34;&gt;&lt;a href=&#34;#1-rt-linux&#34; class=&#34;headerlink&#34; title=&#34;1 rt-linux&#34;&gt;&lt;/a&gt;1 rt-linux&lt;/h3&gt;&lt;h4 id=&#34;1-1-下载内核与补丁&#34;&gt;&lt;a href=&#34;#1-1-下载内核与补丁&#34; class=&#34;headerlink&#34; title=&#34;1.1 下载内核与补丁&#34;&gt;&lt;/a&gt;1.1 下载内核与补丁&lt;/h4&gt;" />
     <meta name="twitter:title" content="编译rt-linux与使用rt-tests | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;h3 id=&#34;1-rt-linux&#34;&gt;&lt;a href=&#34;#1-rt-linux&#34; class=&#34;headerlink&#34; title=&#34;1 rt-linux&#34;&gt;&lt;/a&gt;1 rt-linux&lt;/h3&gt;&lt;h4 id=&#34;1-1-下载内核与补丁&#34;&gt;&lt;a href=&#34;#1-1-下载内核与补丁&#34; class=&#34;headerlink&#34; title=&#34;1.1 下载内核与补丁&#34;&gt;&lt;/a&gt;1.1 下载内核与补丁&lt;/h4&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;h3 id=&#34;1-rt-linux&#34;&gt;&lt;a href=&#34;#1-rt-linux&#34; class=&#34;headerlink&#34; title=&#34;1 rt-linux&#34;&gt;&lt;/a&gt;1 rt-linux&lt;/h3&gt;&lt;h4 id=&#34;1-1-下载内核与补丁&#34;&gt;&lt;a href=&#34;#1-1-下载内核与补丁&#34; class=&#34;headerlink&#34; title=&#34;1.1 下载内核与补丁&#34;&gt;&lt;/a&gt;1.1 下载内核与补丁&lt;/h4&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fs001hbmonc17ehclr" class="article article-type-post" itemscope
+    <article id="post-cldleqo4o001hbyoh7bludjk5" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -180,7 +180,9 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h3 id="1-rt-linux"><a href="#1-rt-linux" class="headerlink" title="1 rt-linux"></a>1 rt-linux</h3><h4 id="1-1-下载内核与补丁"><a href="#1-1-下载内核与补丁" class="headerlink" title="1.1 下载内核与补丁"></a>1.1 下载内核与补丁</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">内核下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">补丁下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">通过与本地内核版本对比，最接近的应该是5.4.154，故下载此版本的内核与补丁</span></span><br><span class="line">mkdir rt_kernel &amp;&amp; cd rt_kernel</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.154.tar.xz</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.154-rt65.patch.xz</span><br><span class="line">tar xf linux-5.4.154.tar.xz</span><br><span class="line">cd linux-5.4.154</span><br><span class="line">xz -dc ../patch-5.4.154-rt65.patch.xz | patch -p1</span><br></pre></td></tr></table></figure>
+            <h3 id="1-rt-linux"><a href="#1-rt-linux" class="headerlink" title="1 rt-linux"></a>1 rt-linux</h3><h4 id="1-1-下载内核与补丁"><a href="#1-1-下载内核与补丁" class="headerlink" title="1.1 下载内核与补丁"></a>1.1 下载内核与补丁</h4><span id="more"></span>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">内核下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">补丁下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">通过与本地内核版本对比，最接近的应该是5.4.154，故下载此版本的内核与补丁</span></span><br><span class="line">mkdir rt_kernel &amp;&amp; cd rt_kernel</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.154.tar.xz</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.154-rt65.patch.xz</span><br><span class="line">tar xf linux-5.4.154.tar.xz</span><br><span class="line">cd linux-5.4.154</span><br><span class="line">xz -dc ../patch-5.4.154-rt65.patch.xz | patch -p1</span><br></pre></td></tr></table></figure>
 
 <h4 id="1-2-配置内核"><a href="#1-2-配置内核" class="headerlink" title="1.2 配置内核"></a>1.2 配置内核</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用make XXXconfig可以生成编译需要的配置文件，这个配置文件是.config。make oldconfig基于已有的.config文件生成新的配置文件，这样就可以避免配置大量的内核参数了。内核版本相差太大，可能出现内核符号不一致的情况，所以上一步需要让内核的版本尽量一致。</span></span><br><span class="line"><span class="built_in">cp</span> /boot/config-5.4.0-87-generic linux-5.4.154/.config</span><br><span class="line">sudo apt install libncurses-dev bison flex bc libelf-dev libssl-dev</span><br><span class="line">make oldconfig	<span class="comment"># 选Fully Preemptible Kernel (RT)</span></span><br><span class="line">		<span class="comment"># CONFIG_DEBUG_INFO的作用是把调试信息加到内核，这会使内核变大。可以赋值N，以减少内核大小。</span></span><br><span class="line">	<span class="comment"># CONFIG_SYSTEM_TRUSTED_KEYS的作用是指定默认的系统keyring，对于Ubuntu的内核它是&#x27;debian/canonical-certs.pem&#x27;，然而我们要编译的内核没有这个文件，所以要把它置空，否则会产生编译错误。</span></span><br></pre></td></tr></table></figure>
 

@@ -8,7 +8,7 @@
     
     <title>xv6的系统调用 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&amp;#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&amp;#x2F;init.c。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "xv6的系统调用 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&amp;#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&amp;#x2F;init.c。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2019/12/21/xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&amp;#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&amp;#x2F;init.c。&lt;/p&gt;" />
     <meta name="twitter:title" content="xv6的系统调用 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&amp;#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&amp;#x2F;init.c。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;p&gt;在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&amp;#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&amp;#x2F;init.c。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2019/12/21/xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1fe000rbmoneosr7w4v" class="article article-type-post" itemscope
+    <article id="post-cldleqo4b000rbyohe5meg06v" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,6 +181,8 @@
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
             <p>在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user&#x2F;initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user&#x2F;init.c。</p>
+<span id="more"></span>
+
 <p>user&#x2F;init.c把文件sh放到内存里执行。文件sh编译自user&#x2F;sh.c，把用户输入的命令调入内存中执行，它就是xv6的shell。</p>
 <p>系统调用怎么从用户态到的内核态呢？文件user&#x2F;usys.pl生成user&#x2F;usys.S，usys.S就是用来完成从用户态到内核态的代码。从代码可见，它是通过ecall产生一个异常来进入内核态，在kernelvec处保存寄存器的上下文，调用kerneltrap，</p>
 <h4 id="进程和内存"><a href="#进程和内存" class="headerlink" title="进程和内存"></a>进程和内存</h4><h5 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h5><p>文件位置：kernel&#x2F;proc.c。作用：创建一个进程。</p>

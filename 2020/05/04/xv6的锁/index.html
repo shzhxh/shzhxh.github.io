@@ -8,7 +8,7 @@
     
     <title>XV6的锁 | 逆流</title>
 
-    <meta name="description" content="积土是功，成山是德。">
+    <meta name="description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述xv6的锁。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +16,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "XV6的锁 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:description" content= "&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述xv6的锁。&lt;/p&gt;" />
     <meta property="og:url" content="https://shzhxh.github.io/2020/05/04/xv6%E7%9A%84%E9%94%81/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="shzhxh" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta property="og:description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述xv6的锁。&lt;/p&gt;" />
     <meta name="twitter:title" content="XV6的锁 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <meta name="twitter:description" content="&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述xv6的锁。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "积土是功，成山是德。",
+            "description": "&lt;h4 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介&#34;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;用自己的语言描述xv6的锁。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "shzhxh" },
             "@type": "BlogPosting",
             "url": "https://shzhxh.github.io/2020/05/04/xv6%E7%9A%84%E9%94%81/index.html",
@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cldlcn1ff000ubmon16t71ezh" class="article article-type-post" itemscope
+    <article id="post-cldleqo4c000ubyoh93xu8osn" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -180,7 +180,10 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述xv6的锁。锁不是操作系统的某个子系统，感觉它更像一个工具，是给并发加上了镣铐。在请求锁<code>acquire()</code>和释放锁<code>release()</code>之间的代码是临界区(critical section)，以前以为临界区是个空间的概念，现在看来临界区也是时间的概念。因为在持有锁的这段时间并没有说不能做什么事情，只是大家都在这个时间段里保护某个数据结构的不变性而已。</p>
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述xv6的锁。</p>
+<span id="more"></span>
+
+<p>锁不是操作系统的某个子系统，感觉它更像一个工具，是给并发加上了镣铐。在请求锁<code>acquire()</code>和释放锁<code>release()</code>之间的代码是临界区(critical section)，以前以为临界区是个空间的概念，现在看来临界区也是时间的概念。因为在持有锁的这段时间并没有说不能做什么事情，只是大家都在这个时间段里保护某个数据结构的不变性而已。</p>
 <h4 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h4><p>自旋锁的核心数据结构是<code>struct spinlock</code>，核心操作是<code>acquire()</code>和<code>release()</code>，它们定义在<code>kernel</code>目录下的<code>spinlock.h</code>和<code>spinlock.c</code>。</p>
 <h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p><code>acquire()</code>用一个<code>while</code>循环来请求锁，它一直在这个<code>while</code>上自旋直到获得锁。获得锁的方式是用builtin函数<code>__sync_lock_test_and_set</code>，这个函数使用原子指令<code>amoswap</code>使锁的值变为1。<code>release()</code>使用<code>__sync_lock_release</code>来释放锁，这个函数最终也使用了<code>amoswap</code>指令。</p>
 <p>自旋锁是要一直死等的，它的代价挺大的，感觉还是能不用尽量不用的好。必须要用的时候，应使临界区尽量地小。且被保护的数据结构在所有的地方都要加自旋锁，否则就失去了保护的意义。</p>
