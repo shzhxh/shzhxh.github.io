@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>XV6的内存管理 | 逆流</title>
+
+    <meta name="description" content="积土是功，成山是德。">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "XV6的内存管理 | 逆流"  />
+    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:url" content="https://shzhxh.github.io/2020/04/11/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta name="twitter:title" content="XV6的内存管理 | 逆流"/>
+    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <script type="application/ld+json">
+        {
+            "description": "积土是功，成山是德。",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2020/04/11/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "XV6的内存管理 | 逆流",
+            "datePublished": "2020-04-11T16:00:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2020/04/11/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cldlb0s01000nd6od7etmagpf" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      XV6的内存管理
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2020-04-11T16:00:00.000Z" itemprop="datePublished">2020-04-11</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/xv6/">xv6</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>用自己的语言描述XV6的内存管理系统。</p>
+<h4 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h4><p>当xv6在启动的过程中，主控函数<code>main</code>调用了三个函数来完成内存管理系统的初始化。</p>
+<ul>
+<li><code>kinit</code>把空闲的物理内存以页为单位放到一个单向链表<code>kmem.freelist</code>里，这样就可以通过操作这个链表来管理物理页了。</li>
+<li><code>kvminit</code>是给物理页和虚拟页之间建立映射关系，这样就为开启分页做好了准备。</li>
+<li><code>kvminithart</code>用于开启分页。</li>
+</ul>
+<p>与内存管理相关的文件有<code>kernel</code>目录下<code>kalloc.c</code>、<code>vm.c</code>、<code>memlayout.h</code>。</p>
+<ul>
+<li><code>kalloc.c</code>的作用是进行物理内存管理，它的核心数据结构是<code>kmem.freelist</code>，它的核心函数是<code>kfree</code>和<code>kalloc</code>。</li>
+<li><code>vm.c</code>的作用是进行虚拟内存的管理，它的核心变量是<code>kernel_pagetable</code>，它的函数用于管理虚拟内存，即包括在管理员模式下，也包括在用户模式下。</li>
+<li><code>memlayout.h</code>的作用是描述物理内存的布局。其内容是一些重要的物理地址的宏定义。</li>
+</ul>
+<h4 id="虚拟内存到物理内存的映射"><a href="#虚拟内存到物理内存的映射" class="headerlink" title="虚拟内存到物理内存的映射"></a>虚拟内存到物理内存的映射</h4><p>RISC-V有三种映射方式，Sv32、Sv39、Sv48。它们区别仅在于映射的层级不一样，进而物理地址和虚拟地址的可表示范围不一样。其中Sv32是二级映射，Sv39是三级映射，Sv48是四级映射。</p>
+<p>虚拟地址和物理地址的页内偏移是相等的，所以，它们的大小的设计仅需考虑PTE。</p>
+<p>对于Sv32，每个PTE占用4个字节，所以页表对应了(4K&#x2F;4B)&#x3D;1024个PTE，所以每一级VPN需要占用10位，所以它的虚拟地址是10*2+12&#x3D;32位。由于高22位是PPN，所以物理地址是22+12&#x3D;34位。</p>
+<p>对于Sv39和Sv48，每个PTE占用8个字节，所以页表对应了(4K&#x2F;8B)&#x3D;512个PTE，所以每一级VPN需要占用9位。类似于Sv32的计算方式，可得它们的有效虚拟地址，Sv39是9*3+12&#x3D;39位，Sv48是9*4+12&#x3D;48位。它们的PPN都是44位，所以物理地址是44+12&#x3D;56位。</p>
+<h4 id="内核空间的映射"><a href="#内核空间的映射" class="headerlink" title="内核空间的映射"></a>内核空间的映射</h4><p>对于机器virtio来说，物理内存是从0x80000000开始计数的，物理内存前面的部分是MMIO。</p>
+<p>0~0x7FFFFFFF是MMIO，映射在虚拟内存相同的位置。</p>
+<p>0x80000000~0x80000000+128M，映射在虚拟内存相同的位置。</p>
+<p>trampoline页，用于内核空间和用户空间的切换，被映射在虚拟内存的顶部。</p>
+<p>内核栈，被映射在虚拟内存里trampoline页的下面。</p>
+<h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/mit-pdos/xv6-riscv-book">xv6-riscv-book Chapter 3</a></li>
+<li>riscv-privileged-v1.10</li>
+</ul>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2020/04/18/xv6%E7%9A%84%E8%87%AA%E9%99%B7/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          XV6的自陷管理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/04/%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">程序员进阶之路</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=XV6的内存管理 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2020%2F04%2F11%2Fxv6%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E7%25AE%25A1%25E7%2590%2586%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=XV6的内存管理 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2020%2F04%2F11%2Fxv6%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E7%25AE%25A1%25E7%2590%2586%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=XV6的内存管理 - 逆流&url=https://shzhxh.github.io/2020/04/11/xv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ACPI/">ACPI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/COD/">COD</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/command/">command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/musl/">musl</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network/">network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/programmer/">programmer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/xv6/">xv6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2018/">year2018</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2019/">year2019</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2021/">year2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/">6.1内核里的Rust</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">OSDI一：编译环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/">创建子进程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/16/UART%E6%A6%82%E8%BF%B0/">UART概述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/09/UEFI%E6%A6%82%E8%BF%B0/">UEFI概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

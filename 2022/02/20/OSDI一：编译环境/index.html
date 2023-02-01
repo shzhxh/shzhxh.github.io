@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>OSDI一：编译环境 | 逆流</title>
+
+    <meta name="description" content="积土是功，成山是德。">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "OSDI一：编译环境 | 逆流"  />
+    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:url" content="https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta name="twitter:title" content="OSDI一：编译环境 | 逆流"/>
+    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <script type="application/ld+json">
+        {
+            "description": "积土是功，成山是德。",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "OSDI一：编译环境 | 逆流",
+            "datePublished": "2022-02-20T12:38:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cldlb0rzr0008d6odhzj55ri7" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      OSDI一：编译环境
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2022-02-20T12:38:00.000Z" itemprop="datePublished">2022-02-20</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/OS/">OS</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>想深入学习操作系统，不喜欢只有理论而没有实践的书，于是选了这本：操作系统的设计与实现(Operating Systems Design and Implementation)。</p>
+<p>第一步是把编译环境建立起来。先是从github上下载源码编译内核，发现在ubuntu20.04环境里是不能编译的，它一上来就是要删除<code>/usr/include</code>目录。然后在ubuntu20.04的docker里编译，让它随便折腾去吧，又发现它的C代码不满足现代的规范。在准备放弃的时候，才发现正确的打开方式。原来它是要在minix3自已的环境里编译自己的。</p>
+<ol>
+<li><p>在<a target="_blank" rel="noopener" href="https://wiki.minix3.org/doku.php?id=www:download:previousversions">这个网址</a>下载OSDI这本书所对应的minix3：minix-3.1.0-book.iso.bz2，解压后是个iso文件。</p>
+</li>
+<li><p>按<a target="_blank" rel="noopener" href="https://wiki.minix3.org/doku.php?id=usersguide:runningonqemu">这个网址</a>的描述创建qemu的启动硬盘。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create minix.img 8G	<span class="comment"># 创建一个硬盘镜像</span></span><br><span class="line">qemu-system-x86_64 -net user -net nic -m 256 -cdrom minix.iso -hda minix.img -boot d	<span class="comment"># 在qemu上执行安装过程</span></span><br><span class="line"><span class="comment"># 输入root登入系统，输入setup执行安装过程</span></span><br><span class="line">poweroff	<span class="comment"># 安装完毕，退出系统</span></span><br><span class="line">off			<span class="comment"># 在接下来的提示符输入此命令退出qemu</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动minix3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -net user -net nic -m 256 -hda minix.img</span><br><span class="line"><span class="comment"># 用户名依然是root</span></span><br><span class="line"><span class="built_in">ls</span> /usr/src		<span class="comment"># 书上所需源码在此目录</span></span><br><span class="line"><span class="built_in">which</span> cc aal	<span class="comment"># 编译环境已具备</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          6.1内核里的Rust
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">创建子进程</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=OSDI一：编译环境 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2022%2F02%2F20%2FOSDI%25E4%25B8%2580%25EF%25BC%259A%25E7%25BC%2596%25E8%25AF%2591%25E7%258E%25AF%25E5%25A2%2583%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=OSDI一：编译环境 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2022%2F02%2F20%2FOSDI%25E4%25B8%2580%25EF%25BC%259A%25E7%25BC%2596%25E8%25AF%2591%25E7%258E%25AF%25E5%25A2%2583%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=OSDI一：编译环境 - 逆流&url=https://shzhxh.github.io/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ACPI/">ACPI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/COD/">COD</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/command/">command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/musl/">musl</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network/">network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/programmer/">programmer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/xv6/">xv6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2018/">year2018</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2019/">year2019</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2021/">year2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/">6.1内核里的Rust</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">OSDI一：编译环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/">创建子进程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/16/UART%E6%A6%82%E8%BF%B0/">UART概述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/09/UEFI%E6%A6%82%E8%BF%B0/">UEFI概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

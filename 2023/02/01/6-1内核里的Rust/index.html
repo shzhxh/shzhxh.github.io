@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>6.1内核里的Rust | 逆流</title>
+
+    <meta name="description" content="积土是功，成山是德。">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "6.1内核里的Rust | 逆流"  />
+    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:url" content="https://shzhxh.github.io/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta name="twitter:title" content="6.1内核里的Rust | 逆流"/>
+    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <script type="application/ld+json">
+        {
+            "description": "积土是功，成山是德。",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "6.1内核里的Rust | 逆流",
+            "datePublished": "2023-02-01T13:57:49.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cldlb0rzn0005d6od4peo911f" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      6.1内核里的Rust
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-02-01T13:57:49.000Z" itemprop="datePublished">2023-02-01</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/Linux/">Linux</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>这是一篇翻译文档，源链接：<a target="_blank" rel="noopener" href="https://lwn.net/Articles/910762/">lwn</a></p>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><ul>
+<li>Linux6.1内核引入了对Rust语言的支持。</li>
+<li>6.1内核不运行Rust代码，只是给了内核开发者体验Rust开发的机会。</li>
+<li>开发者所能做的事是构建一个可以加载到内核里的模块。</li>
+<li>开发者很可能会觉得内核里的Rust还不够做一些有趣的事。</li>
+</ul>
+<h4 id="Rust-for-Linux的相关工作"><a href="#Rust-for-Linux的相关工作" class="headerlink" title="Rust for Linux的相关工作"></a>Rust for Linux的相关工作</h4><ul>
+<li>支持代码</li>
+<li>驱动程序</li>
+<li>Apple图形驱动程序</li>
+</ul>
+<h4 id="构建Rust支持"><a href="#构建Rust支持" class="headerlink" title="构建Rust支持"></a>构建Rust支持</h4><ul>
+<li>参考<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/rust/quick-start.rst">quick-start</a>以获取构建Rust支持的条件。</li>
+<li>Rust编译器要求是1.62.0。</li>
+<li>bindgen要求是0.56.0。</li>
+</ul>
+<h4 id="示例模块"><a href="#示例模块" class="headerlink" title="示例模块"></a>示例模块</h4><ul>
+<li>条件满足后，内核配置系统将出现CONFIG_RUST选项，可以构建示例模块了。</li>
+<li>示例模块是samples&#x2F;rust&#x2F;rust_minimal.rs<br>&#96;&#96;&#96;rust<br>use kernel::prelude::*;  &#x2F;&#x2F; 引入一些类型、函数和宏<br>&#x2F;&#x2F; 用一个宏取代C内核模块里的宏<br>module! {<br>type: RustMinimal,  &#x2F;&#x2F; 实际模块代码的入口<br>name: “rust_minimal”,<br>author: “Rust for Linux Contributors”,<br>description: “Rust minimal sample”,<br>license: “GPL”,<br>}<br>&#x2F;&#x2F; 开发人员需要提供RustMinimal的定义<br>struct RustMinimal {<br>numbers: Vec<i32>,<br>}<br>&#x2F;&#x2F; 为RustMinimal实现kernel::Module的trait<br>impl kernel::Module for RustMinimal {<br>&#x2F;&#x2F; 模块初始化，打印2行信息，然后保存一些数字<br>fn init() -&gt; Result<Self> {<br>    …    }<br>}<br>&#x2F;&#x2F; 析构函数的实现<br>impl Drop for RustMinimal {<br>&#x2F;&#x2F; 打印一些数字后，模块被移除，内存被释放<br>fn drop(&amp;mut self) {<br>    …<br>}<br>}</li>
+</ul>
+<h4 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h4><ul>
+<li>下一步是添加一些基础设施以与其它内核子系统交互</li>
+<li>幸运的话，6.2内核里的Rust功能将显著增强</li>
+</ul>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">OSDI一：编译环境</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=6.1内核里的Rust - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2023%2F02%2F01%2F6-1%25E5%2586%2585%25E6%25A0%25B8%25E9%2587%258C%25E7%259A%2584Rust%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=6.1内核里的Rust - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2023%2F02%2F01%2F6-1%25E5%2586%2585%25E6%25A0%25B8%25E9%2587%258C%25E7%259A%2584Rust%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=6.1内核里的Rust - 逆流&url=https://shzhxh.github.io/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ACPI/">ACPI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/COD/">COD</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/command/">command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/musl/">musl</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network/">network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/programmer/">programmer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/xv6/">xv6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2018/">year2018</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2019/">year2019</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2021/">year2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/">6.1内核里的Rust</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">OSDI一：编译环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/">创建子进程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/16/UART%E6%A6%82%E8%BF%B0/">UART概述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/09/UEFI%E6%A6%82%E8%BF%B0/">UEFI概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

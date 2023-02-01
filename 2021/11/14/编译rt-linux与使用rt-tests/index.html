@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>编译rt-linux与使用rt-tests | 逆流</title>
+
+    <meta name="description" content="积土是功，成山是德。">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "编译rt-linux与使用rt-tests | 逆流"  />
+    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:url" content="https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta name="twitter:title" content="编译rt-linux与使用rt-tests | 逆流"/>
+    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <script type="application/ld+json">
+        {
+            "description": "积土是功，成山是德。",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "编译rt-linux与使用rt-tests | 逆流",
+            "datePublished": "2021-11-14T14:02:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cldlb0s0l001hd6oddldf4a3r" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      编译rt-linux与使用rt-tests
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2021-11-14T14:02:00.000Z" itemprop="datePublished">2021-11-14</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/Linux/">Linux</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h3 id="1-rt-linux"><a href="#1-rt-linux" class="headerlink" title="1 rt-linux"></a>1 rt-linux</h3><h4 id="1-1-下载内核与补丁"><a href="#1-1-下载内核与补丁" class="headerlink" title="1.1 下载内核与补丁"></a>1.1 下载内核与补丁</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">内核下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">补丁下载地址：https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">通过与本地内核版本对比，最接近的应该是5.4.154，故下载此版本的内核与补丁</span></span><br><span class="line">mkdir rt_kernel &amp;&amp; cd rt_kernel</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.154.tar.xz</span><br><span class="line">wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.154-rt65.patch.xz</span><br><span class="line">tar xf linux-5.4.154.tar.xz</span><br><span class="line">cd linux-5.4.154</span><br><span class="line">xz -dc ../patch-5.4.154-rt65.patch.xz | patch -p1</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-配置内核"><a href="#1-2-配置内核" class="headerlink" title="1.2 配置内核"></a>1.2 配置内核</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用make XXXconfig可以生成编译需要的配置文件，这个配置文件是.config。make oldconfig基于已有的.config文件生成新的配置文件，这样就可以避免配置大量的内核参数了。内核版本相差太大，可能出现内核符号不一致的情况，所以上一步需要让内核的版本尽量一致。</span></span><br><span class="line"><span class="built_in">cp</span> /boot/config-5.4.0-87-generic linux-5.4.154/.config</span><br><span class="line">sudo apt install libncurses-dev bison flex bc libelf-dev libssl-dev</span><br><span class="line">make oldconfig	<span class="comment"># 选Fully Preemptible Kernel (RT)</span></span><br><span class="line">		<span class="comment"># CONFIG_DEBUG_INFO的作用是把调试信息加到内核，这会使内核变大。可以赋值N，以减少内核大小。</span></span><br><span class="line">	<span class="comment"># CONFIG_SYSTEM_TRUSTED_KEYS的作用是指定默认的系统keyring，对于Ubuntu的内核它是&#x27;debian/canonical-certs.pem&#x27;，然而我们要编译的内核没有这个文件，所以要把它置空，否则会产生编译错误。</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-编译内核"><a href="#1-3-编译内核" class="headerlink" title="1.3 编译内核"></a>1.3 编译内核</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># make deb-pkg用于构建deb内核包，即包括源码包也包括二进制包。</span></span><br><span class="line">make -j4 deb-pkg	<span class="comment"># 我的CPU是4核，故选-j4</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-安装deb包"><a href="#1-4-安装deb包" class="headerlink" title="1.4 安装deb包"></a>1.4 安装deb包</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i ../*.deb</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-rt-tests"><a href="#2-rt-tests" class="headerlink" title="2 rt-tests"></a>2 rt-tests</h3><p>rt-tests是一个用于测试各种Linux的实时特性的测试套件。</p>
+<h4 id="2-1-编译与安装"><a href="#2-1-编译与安装" class="headerlink" title="2.1 编译与安装"></a>2.1 编译与安装</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential libnuma-dev	# 安装编译环境和必需的库</span><br><span class="line">git clone git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git</span><br><span class="line">cd rt-tests</span><br><span class="line">git checkout stable/v1.0	# master分支不是稳定版，所以要切换到stable分支</span><br><span class="line">make all</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-用法"><a href="#2-2-用法" class="headerlink" title="2.2 用法"></a>2.2 用法</h4><h5 id="cyclictest"><a href="#cyclictest" class="headerlink" title="cyclictest"></a><a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/cyclictest/start">cyclictest</a></h5><p>通过精确测量线程的预期唤醒时间和实际唤醒时间，以提供系统时延的统计信息。这些时延是由硬件、固件和操作系统引起的。</p>
+<p>cyclictest通过运行一个非实时的主线程(调度类型SCHED_OTHER)来测试时延，它会启动固定数量的度量线程，这此度量线程有固定的实时优先级(调度类型SCHED_FIFO)。度量线程被在固定间隔内被计时器周期性地唤醒。随后，预期唤醒时间和实际唤醒时间通过共享内存传给主线程。主线程追踪时延的值并打印出它们。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cyclictest [options]</span><br><span class="line"># 选项</span><br><span class="line">-a, --affinity[=PROC-SET]	# 指定哪些核来运行线程。不指定[PROC-SET]，则使用所有的核。 </span><br><span class="line">-d, --distance=&lt;DIST&gt;	# 线程间隔之间的距离，单位us，默认值500。当每个核上只有1个线程，建议设置为0.当每个核上有多个线程，用来隔开线程唤醒的时间，这个值会累加到interval的值上。</span><br><span class="line">-h, --histogram=&lt;US&gt;	# 输出时延直方图(latency histogram)的数据，这些数据可以用来生成一个时延直方图。&lt;US&gt;是要跟踪的最大时延，以毫秒为单位。此选项会使所有线程的优先级相等。</span><br><span class="line">-i, --interval=&lt;INTV&gt;	# 线程间的基本间隔，单位微秒，默认值1000。即线程多久被唤醒1次。</span><br><span class="line">-l, --loops=&lt;LPS&gt;	# 设定循环的次数。默认为0(无限循环)。</span><br><span class="line">-m, --mlockall		# 锁定当前及未来的内存分配，以防止被换页的时候换出</span><br><span class="line">-n, --nanosleep		# 使用clock_nanosleep运行测试，这样精度就更高了。如不用此选项，则使用posix间隔计数器。</span><br><span class="line">-p, --priority=&lt;PRIO&gt;	# 设置第一个线程的优先级。</span><br><span class="line">-S, --smp		# 对SMP系统的标准测试选项。相当于&quot;-t -a -n&quot;，且让所有线程的优先级保持相等</span><br><span class="line">-t, --threads[=num]	# 设置测试线程的数量。如果不指定[num]，则为处理器的核心数。若不使用此选项，则线程数为1.</span><br><span class="line"># 示例</span><br><span class="line">sudo cyclictest -t 5 -p 80 -n	# 5个线程，最高优先级80，无限循环</span><br><span class="line">sudo cyclictest -t 1 -p 99 -n -l 1000 -m -i 2 -h 100	# 1个线程，优先级99，循环1000次，输出时延直方图</span><br><span class="line">sudo cyclictest -m -S -p 80 -i 200 -d 0	# 测试smp系统的时延</span><br></pre></td></tr></table></figure>
+
+<p>结果的含意：</p>
+<table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T</td>
+<td>Thread</td>
+<td>线程索引和线程ID</td>
+</tr>
+<tr>
+<td>P</td>
+<td>Priority</td>
+<td>RT线程的优先级</td>
+</tr>
+<tr>
+<td>I</td>
+<td>Interval</td>
+<td>度量线程的预期唤醒周期，单位us</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Count</td>
+<td>时延被测量的次数，例如：迭代次数</td>
+</tr>
+<tr>
+<td>Min</td>
+<td>Minimum</td>
+<td>测量到的最小时延，单位us</td>
+</tr>
+<tr>
+<td>Act</td>
+<td>Actual</td>
+<td>最近完成的迭代测量到的时延，单位us</td>
+</tr>
+<tr>
+<td>Max</td>
+<td>Maximum</td>
+<td>测量到的最大时延，单位us</td>
+</tr>
+</tbody></table>
+<h5 id="hackbench"><a href="#hackbench" class="headerlink" title="hackbench"></a><a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/hackbench">hackbench</a></h5><p>hackbench用来定位系统中的瓶颈，这些瓶颈应该被消除或优化。</p>
+<p>hackbench测试的是内核里的调度器。它还可以通过重复设置和删除线程来对内存子系统进行压力测试。此外，它还可以在一定程度上对进程间通信（如本地的网络插座，管道等）进行压力测试。</p>
+<p>它可以测试系统的负载，但不能精确测试应用的负载，因为它不测试与设备的通信。</p>
+<p>它创建若干对可调度实体（进程或线程），每对调度实体之间通过网络插座或管道通信，它会记录每对之间来回发送数据的时间。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hackbench [options]</span><br><span class="line"># 选项</span><br><span class="line">-p, --pipe	# 使用管道发送数据。（默认用网络插座发送数据。）</span><br><span class="line">-s, --datasize=&lt;SIZE&gt;	# 每条消息的大小。默认100字节。</span><br><span class="line">-l, --loops=&lt;NUM&gt;	# 每个实体发送消息的数量。默认100条。</span><br><span class="line">-g, --groups=&lt;NUM&gt;	# 指定可调度实体的对数。默认10对。</span><br><span class="line">-f, --fds=&lt;NUM&gt;	# 每个实体要用的文件描述符数量。默认40个。</span><br><span class="line">-T, --threads	# 创建的是线程。</span><br><span class="line">-P, --process	# 创建的是进程。默认参数。</span><br><span class="line">--help</span><br><span class="line"># 示例</span><br><span class="line">hackbench	# 创建10对进程，每个进程都通过网络插座发100条数据，每条数据包含100字节，每个进程使用40个文件描述符。</span><br><span class="line">hackbench -p -T	# 创建10对线程，每个线程都通过管道发100条数据，每条数据包含100字节，每个线程使用40个文件描述符。</span><br><span class="line">hackbench -s 512 -l 200 -g 15 -f 25 -P	# 创建15对进程，每个进程都通过网络插座发200条数据，每条数据包含512字节，每个进程使用25个文件描述符。</span><br></pre></td></tr></table></figure>
+
+<h5 id="hwlatdetect"><a href="#hwlatdetect" class="headerlink" title="hwlatdetect"></a>hwlatdetect</h5><p>本程序用来控制内核模块hwlat_detector.ko，这个内核模块是用来探测硬件时延的，注意这个时延和Linux内核自身无关。</p>
+<p>本程序刚开始是用来探测x86上的SMIs（系统管理中断）。SMIs不由内核管理，内核一般也感知不到它。SMIs由BIOS设置和管理，一般用于关键事件，如热传感器和风扇的管理。有时，SMIs也用来管理那些占用时间过长的任务。</p>
+<p>hwlat_detector.ko模块的工作原理：通过调用<code>stop_machine()</code>占用CPU的所有可配置时间，轮询TSC（时间戳计数器），然后查找TSC之间的空隙。由于机器已经停止了，中断也关闭了，所有的间隙都表示轮询被中断的时间，只有SMI能做到了。</p>
+<p>本程序管理着debugsf的挂载、卸载，hwlat_detector.ko模块的加载、卸载。</p>
+<h5 id="pip-stress"><a href="#pip-stress" class="headerlink" title="pip_stress"></a>pip_stress</h5><p>本程序测试进程间的优先级继承。本程序不接受任何参数，会在运行完毕后直接退出。</p>
+<p>本程序会创建三个进程，这三个进程通过共享内存使用一个优先级继承的互斥锁，且都绑定在一个CPU上。最低优先级的进程持有互斥锁，然后中等优先级的进程抢占它，然后最高优先级的进程抢到这个互斥锁。由于优先级继承互斥锁使用的低优先级进程借给高优先级进程的优先级来解锁互斥锁，这就会阻止中优先级进程阻塞高优先级进程。</p>
+<h5 id="pi-stress"><a href="#pi-stress" class="headerlink" title="pi_stress"></a>pi_stress</h5><p>对互斥锁的优先级继承的压力测试。它作为时间优先级任务运行，并启动inversion machine thread groups。每个inversion group都会导致优先级反转条件，这样如果优先级继承不起作用则会死锁。</p>
+<p>注：pi_stress线程是作为SCHED_FIFO或SCHED_RR线程运行的，这意味着它们可以使系统关键线程饥饿。建议在pi_stress之前把系统关键线程的调度策略改为SCHED_FIFO，并使用10以上的优先级，以避免pi_stress使这些线程饥饿。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pi_stress [options]</span><br><span class="line"># 选项</span><br><span class="line">-i, --inversions=&lt;n&gt;	# 指定反转条件的数量，即所有inversion group可以反转条件的总数。默认是-1代表无限次。</span><br><span class="line">-t, --duration=&lt;n&gt;		# 指定测试运行时间为n秒。</span><br><span class="line">-g, --groups=&lt;n&gt;		# inversion group的数量，默认10.</span><br><span class="line">-d, --debug		# 调试模式，会输出大量信息</span><br><span class="line">-v, --verbose	# 输出详细信息</span><br><span class="line">-s, --signal	# 在接收到SIGTERM信号(Ctrl+C)后结束。默认按下任意键结束。</span><br><span class="line">-r, --rr		# 让inversion threads作为SCHED_RR(round-robin)线程运行。默认是SCHED_FIFO。</span><br><span class="line">-p, --prompt	# 在真正进行压力测试之前进行提示</span><br><span class="line">-u, --uniprocesor	# 用一个处理器运行所有的线程。默认是inversion threads在一个处理器，admin threads在其它的处理器。</span><br><span class="line">-m, --mlockall	# 锁定当前及未来的内存分配，以防止被换页的时候换出</span><br><span class="line">-h</span><br></pre></td></tr></table></figure>
+
+<h5 id="pmqtest"><a href="#pmqtest" class="headerlink" title="pmqtest"></a>pmqtest</h5><p>开启线程对，使用POSIX消息队列测量进程间通信的时延。线程对之间通过<code>mq_send()/mw_receive()</code>同步，测量的是发送和接收消息的时延。</p>
+<h5 id="ptsematest"><a href="#ptsematest" class="headerlink" title="ptsematest"></a>ptsematest</h5><p>开启两个线程，使用POSIX互斥锁测量进程间通信的时延。两个线程之间通过<code>pthread_mutex_unlock()/pthread_mutex_lock()</code>同步，测量的是释放和获取锁的时延。</p>
+<h5 id="rt-migrate-test"><a href="#rt-migrate-test" class="headerlink" title="rt-migrate-test"></a>rt-migrate-test</h5><p>实时任务迁移程序。测试任务在多处理器上的实时调度，以确保最高优先级的任务可以运行在所有CPU上。</p>
+<h5 id="signaltest"><a href="#signaltest" class="headerlink" title="signaltest"></a>signaltest</h5><p>信号往返测试</p>
+<h5 id="sigwaittest"><a href="#sigwaittest" class="headerlink" title="sigwaittest"></a>sigwaittest</h5><p>启动两个线程，或fork两个进程，测量它们之间收发信号的时延</p>
+<h5 id="svsematest"><a href="#svsematest" class="headerlink" title="svsematest"></a>svsematest</h5><p>启动两个线程，或fork两个进程，测量信号量SYSV的时延。</p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2021/11/21/riscv%E6%8C%87%E4%BB%A4%E9%9B%86%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E6%A0%B7%E8%AE%BE%E8%AE%A1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          riscv指令集为什么这样设计
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/10/30/%E4%B8%80%E4%BA%9B%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%AF%8D%E6%B1%87%E7%9A%84%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">吐槽一些计算机词汇的中文翻译</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=编译rt-linux与使用rt-tests - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2021%2F11%2F14%2F%25E7%25BC%2596%25E8%25AF%2591rt-linux%25E4%25B8%258E%25E4%25BD%25BF%25E7%2594%25A8rt-tests%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=编译rt-linux与使用rt-tests - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2021%2F11%2F14%2F%25E7%25BC%2596%25E8%25AF%2591rt-linux%25E4%25B8%258E%25E4%25BD%25BF%25E7%2594%25A8rt-tests%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=编译rt-linux与使用rt-tests - 逆流&url=https://shzhxh.github.io/2021/11/14/%E7%BC%96%E8%AF%91rt-linux%E4%B8%8E%E4%BD%BF%E7%94%A8rt-tests/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ACPI/">ACPI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/COD/">COD</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/command/">command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/musl/">musl</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network/">network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/programmer/">programmer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/xv6/">xv6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2018/">year2018</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2019/">year2019</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2021/">year2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/">6.1内核里的Rust</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">OSDI一：编译环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/">创建子进程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/16/UART%E6%A6%82%E8%BF%B0/">UART概述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/09/UEFI%E6%A6%82%E8%BF%B0/">UEFI概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

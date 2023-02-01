@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>从xv6的启动到内存初始化 | 逆流</title>
+
+    <meta name="description" content="积土是功，成山是德。">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "从xv6的启动到内存初始化 | 逆流"  />
+    <meta property="og:description" content= "积土是功，成山是德。" />
+    <meta property="og:url" content="https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="积土是功，成山是德。" />
+    <meta name="twitter:title" content="从xv6的启动到内存初始化 | 逆流"/>
+    <meta name="twitter:description" content="积土是功，成山是德。"/>
+    <script type="application/ld+json">
+        {
+            "description": "积土是功，成山是德。",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "从xv6的启动到内存初始化 | 逆流",
+            "datePublished": "2019-12-07T16:00:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cldlb0s08000xd6odhslm7vbo" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      从xv6的启动到内存初始化
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2019-12-07T16:00:00.000Z" itemprop="datePublished">2019-12-07</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/xv6/">xv6</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。</p>
+<h4 id="一、-运行前的准备"><a href="#一、-运行前的准备" class="headerlink" title="一、 运行前的准备"></a>一、 运行前的准备</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/mit-pdos/xv6-riscv.git	# 下载xv6源码</span><br><span class="line">sudo apt install gcc-8-riscv64-linux-gnu	# 安装编译工具</span><br><span class="line"># 需自行编译qemu,编译目标为riscv64-softmmu</span><br><span class="line">cd xv6-riscv</span><br><span class="line">vim Makefile	# 把第51行的&quot;CC = ...&quot;里的&quot;gcc&quot;改为&quot;gcc-8&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、运行xv6"><a href="#二、运行xv6" class="headerlink" title="二、运行xv6"></a>二、运行xv6</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xv6-riscv</span><br><span class="line">make qemu </span><br></pre></td></tr></table></figure>
+
+<p>编译主要是生成kernel和fs.img两个文件。kernel是从kernel&#x2F;目录下的文件编译出来的，它是xv6的内核。fs.img是一个镜像文件，包含了一些用户态的程序，这些程序是从user&#x2F;目录编译出来的。这些用户态的程序，通过mkfs\目录下的mkfs.c生成的程序mkfs，放到fs.img里。</p>
+<h4 id="三、内核的入口"><a href="#三、内核的入口" class="headerlink" title="三、内核的入口"></a>三、内核的入口</h4><p>kernel&#x2F;kernel.ld是把内核链接起来的配置文件，在这个文件里指明了内核的入口是<code>_entry</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENTRY( _entry )</span><br></pre></td></tr></table></figure>
+
+<p><code>_entry</code>在文件kernel&#x2F;entry.S，当前运行在机器态，这段代码的作用是为C代码的运行做准备，一旦做好准备就跳转到C代码的start函数开始执行。具体来看，它就是为每个核准备了4K大小的栈空间，这些栈的空间都在是kernel&#x2F;start.c函数里分配的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__attribute__ ((aligned (16))) char stack0[4096 * NCPU];</span><br></pre></td></tr></table></figure>
+
+<h4 id="四、跳转到C"><a href="#四、跳转到C" class="headerlink" title="四、跳转到C"></a>四、跳转到C</h4><p><code>start</code>函数在kernel&#x2F;start.c，它的作用是为进入S特权级做好准备，一旦准备完成就进入S态，从<code>main</code>函数开始执行。</p>
+<ul>
+<li>设置mstatus寄存器告诉它我们是从S态进入的，设置mepc寄存器告诉它我们在S态的进入点是main，这样在执行mret指令后处理器就会“返回”到S态，从main函数开始执行。</li>
+<li>设置satp寄存器为0是告诉处理器在进入S态后不开启分页。</li>
+<li>设置medeleg和mideleg，告诉它们在S态处理异常和中断。所有的处理都放在S态，这样提升了效率，降低了代码的复杂度。</li>
+<li>timerinit函数用来设置计时器中断。</li>
+<li>把当前核的编号放在tp寄存器里，这是为内核函数cpuid准备的。</li>
+<li>执行mret指令，跳转到S态。</li>
+</ul>
+<h4 id="五、内核的总控函数main"><a href="#五、内核的总控函数main" class="headerlink" title="五、内核的总控函数main"></a>五、内核的总控函数main</h4><p><code>main</code>函数在kernel&#x2F;main.c，处理器从这个函数开始进入了S态，这个函数是内核的总控函数，它完成了硬件及内核相关数据结构的初始化，最后以处理机调度的状态一直存在着。main函数之后，用户态的第一个进程开始执行了。</p>
+<h4 id="六、与外界交互"><a href="#六、与外界交互" class="headerlink" title="六、与外界交互"></a>六、与外界交互</h4><p><code>main</code>函数首先要做的事是与外界交互，这样才能看到内核运行的状况，方便定位问题。实现这个功能的函数是<code>consoleinit</code>, <code>printfinit</code>, <code>printf</code>。</p>
+<ul>
+<li>consoleinit是从硬件的层面初始化输入输出。首先，它初始化了控制台的锁cons.lock，这是为了避免多个核同时使用控制台引发输入输出的混乱。然后，初始化uart。最后，把consoleread和consolewrite连接到系统调用read和write。</li>
+<li>printfinit函数的作用是初始化printf函数的锁pr.lock，这也是为了避免多个核同时使用printf函数引发输入输出的混乱。</li>
+<li>printf函数依赖于consputc，consputc依赖于uartputc。可见，对uart的初始化是实现printf函数的基础。</li>
+</ul>
+<h4 id="七、内存的初始化"><a href="#七、内存的初始化" class="headerlink" title="七、内存的初始化"></a>七、内存的初始化</h4><p>内存的初始化就是建立虚拟内存和物理内存之间的映射关系。实现这个功能的函数是<code>kinit</code>, <code>kvminit</code>,<code>kvminithart</code>。</p>
+<ul>
+<li>kinit把空闲内存加到了一个单向链表freelist里，这样就可以通过链表freelist来管理这些空闲内存了。</li>
+<li>kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核&#x2F;用户空间切换的代码空间建立映射。</li>
+<li>kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。</li>
+</ul>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2019/12/14/xv6%E7%9A%84%E5%90%AF%E5%8A%A8%EF%BC%9A%E4%BB%8E%E8%BF%9B%E7%A8%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%B0%E5%A4%9A%E6%A0%B8%E8%B0%83%E5%BA%A6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          xv6的启动：从进程初始化到多核调度
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/01/1%E6%9C%88%E8%AE%B0%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">1月记录</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=从xv6的启动到内存初始化 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2019%2F12%2F07%2F%25E4%25BB%258Exv6%25E7%259A%2584%25E5%2590%25AF%25E5%258A%25A8%25E5%2588%25B0%25E5%2586%2585%25E5%25AD%2598%25E5%2588%259D%25E5%25A7%258B%25E5%258C%2596%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=从xv6的启动到内存初始化 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2019%2F12%2F07%2F%25E4%25BB%258Exv6%25E7%259A%2584%25E5%2590%25AF%25E5%258A%25A8%25E5%2588%25B0%25E5%2586%2585%25E5%25AD%2598%25E5%2588%259D%25E5%25A7%258B%25E5%258C%2596%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=从xv6的启动到内存初始化 - 逆流&url=https://shzhxh.github.io/2019/12/07/%E4%BB%8Exv6%E7%9A%84%E5%90%AF%E5%8A%A8%E5%88%B0%E5%86%85%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ACPI/">ACPI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/COD/">COD</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/command/">command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/musl/">musl</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/network/">network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/programmer/">programmer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/xv6/">xv6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2018/">year2018</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2019/">year2019</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/year2021/">year2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/01/6-1%E5%86%85%E6%A0%B8%E9%87%8C%E7%9A%84Rust/">6.1内核里的Rust</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/20/OSDI%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/">OSDI一：编译环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/23/%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B/">创建子进程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/16/UART%E6%A6%82%E8%BF%B0/">UART概述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/09/UEFI%E6%A6%82%E8%BF%B0/">UEFI概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
