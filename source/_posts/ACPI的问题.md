@@ -2,7 +2,8 @@
 layout: post
 title:  "ACPI的问题"
 date:   2018-10-25 22:02:00 +0800
-categories: ACPI
+categories: OS
+tags: ACPI
 ---
 
 ACPI是高级配置和电源接口的缩写，我感觉自己碰到的计算机的问题里关于ACPI的问题都比较难搞。

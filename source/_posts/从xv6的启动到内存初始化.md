@@ -2,7 +2,8 @@
 layout: post
 title:  "从xv6的启动到内存初始化"
 date:   2019-12-08 00:00:00 +0800
-categories: xv6
+categories: OS
+tags: xv6
 ---
 
 这里所指的xv6是指它的riscv版，而不是它的x86版。我用的操作系统是Ubuntu 18.04。

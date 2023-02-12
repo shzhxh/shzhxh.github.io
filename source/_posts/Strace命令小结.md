@@ -2,7 +2,7 @@
 layout: post
 title:  "Strace命令小结"
 date:   2021-05-30 22:02:00 +0800
-categories: Linux
+categories: Command
 ---
 
 #### 概述

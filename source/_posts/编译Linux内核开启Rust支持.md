@@ -1,8 +1,8 @@
 ---
 title: 编译Linux内核开启Rust支持
 date: 2023-02-06 14:05:57
-categories: Linux
-tags:
+categories: OS
+tags: Linux
 ---
 
 编译Rust for Linux过程记录

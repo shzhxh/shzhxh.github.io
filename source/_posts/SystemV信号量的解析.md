@@ -2,7 +2,8 @@
 layout: post
 title:  "SystemV信号量的解析"
 date:   2021-12-04 18:38:00 +0800
-categories: Linux
+categories: OS
+tags: Linux
 ---
 
 glibc提供了两种信号量。POSIX信号量和SystemV信号量。

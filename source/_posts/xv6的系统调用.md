@@ -2,7 +2,8 @@
 layout: post
 title:  "xv6的系统调用"
 date:   2019-12-22 00:00:00 +0800
-categories: xv6
+categories: OS
+tags: xv6
 ---
 
 在xv6启动的过程中，0号核在main函数里会执行userinit函数，标记initcode处的数据会复制到第一个用户进程的内存空间。标记initcode的数字是一段代码，它对应的内容在user/initcode.S，是要把文件init的内容放到内存里以用户态去执行。文件init编译自user/init.c。

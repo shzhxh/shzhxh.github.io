@@ -1,8 +1,8 @@
 ---
 title: 6.1内核里的Rust
 date: 2023-02-01 13:57:49
-categories: Linux
-tags:
+categories: OS
+tags: Linux
 ---
 
 这是一篇翻译文档，源链接：[lwn](https://lwn.net/Articles/910762/)

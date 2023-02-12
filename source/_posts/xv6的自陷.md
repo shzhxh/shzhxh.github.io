@@ -2,7 +2,8 @@
 layout: post
 title:  "XV6的自陷管理"
 date:   2020-04-19 00:00:00 +0800
-categories: xv6
+categories: OS
+tags: xv6
 ---
 
 #### 简介

@@ -2,7 +2,8 @@
 layout: post
 title:  "riscv指令集为什么这样设计"
 date:   2021-11-21 22:02:00 +0800
-categories: COD
+categories: Hardware
+tags: COD
 ---
 
 机器语言是一个折中，一方面是人类想要的自然语言，一方面是机器能提供的位运算。

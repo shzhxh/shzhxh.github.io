@@ -2,7 +2,7 @@
 layout: post
 title:  "编译rt-linux与使用rt-tests"
 date:   2021-11-14 22:02:00 +0800
-categories: Linux
+categories: Command
 ---
 
 ### 1 rt-linux

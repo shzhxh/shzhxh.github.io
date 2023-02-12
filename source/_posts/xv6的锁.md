@@ -2,7 +2,8 @@
 layout: post
 title:  "XV6的锁"
 date:   2020-05-05 00:00:00 +0800
-categories: xv6
+categories: OS
+tags: xv6
 ---
 
 #### 简介
