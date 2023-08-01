@@ -6,47 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     
-    <title>SystemV信号量的解析 | 逆流</title>
+    <title>Archive | 2023/8 | 逆流</title>
 
     <meta name="description" content="积土是功，成山是德。">
     <meta name="keywords" content="">
 
     
-
-    <meta property="og:locale" content="en" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content= "SystemV信号量的解析 | 逆流"  />
-    <meta property="og:description" content= "积土是功，成山是德。" />
-    <meta property="og:url" content="https://shzhxh.github.io/2021/12/04/SystemV%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%90/index.html" />
-    <meta property="og:site_name" content="" />
-    <meta property="article:author" content="shzhxh" />
-    <meta property="article:publisher" content="" />
-    <meta property="og:description" content="积土是功，成山是德。" />
-    <meta name="twitter:title" content="SystemV信号量的解析 | 逆流"/>
-    <meta name="twitter:description" content="积土是功，成山是德。"/>
-    <script type="application/ld+json">
-        {
-            "description": "积土是功，成山是德。",
-            "author": { "@type": "Person", "name": "shzhxh" },
-            "@type": "BlogPosting",
-            "url": "https://shzhxh.github.io/2021/12/04/SystemV%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%90/index.html",
-            "publisher": {
-            "@type": "Organization",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://shzhxh.github.ioundefined"
-            },
-            "name": "shzhxh"
-            },
-            "headline": "SystemV信号量的解析 | 逆流",
-            "datePublished": "2021-12-04T10:38:00.000Z",
-            "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": "https://shzhxh.github.io/2021/12/04/SystemV%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%90/index.html"
-            },
-            "@context": "http://schema.org"
-        }
-    </script>
 
 
 
@@ -74,7 +39,7 @@
 
 
     <script>
-        window.isPost = true
+        window.isPost = false
         window.aomori = {
             
             
@@ -137,126 +102,34 @@
         <div class="main">
             <section class="inner">
                 <section class="inner-main">
-                    <div class="post">
-    <article id="post-clkrqfr7g000jeaof6yj642of" class="article article-type-post" itemscope
-    itemprop="blogPost">
+                    
 
-    <div class="article-inner">
-
-        
-          
-        
-        
-        
-
-        
-        <header class="article-header">
-            
+    
+    
+    
+    
+    <section class="archives-wrap">
+        <div class="archive-year-wrap">
+        <a href="/archives/2023" class="archive-year">2023</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
   
-    <h1 class="article-title" itemprop="name">
-      SystemV信号量的解析
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2023/08/01/%E4%BA%BA%E7%94%9F%E5%AE%88%E5%88%99/">人生守则</a>
     </h1>
   
-
-        </header>
-        
-
-        <div class="article-more-info article-more-info-post hairline">
-
-            <div class="article-date">
-  <time datetime="2021-12-04T10:38:00.000Z" itemprop="datePublished">2021-12-04</time>
-</div>
-
-            
-            <div class="article-category">
-                <a class="article-category-link" href="/categories/OS/">OS</a>
-            </div>
-            
-
-            
-            <div class="article-tag">
-                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
-            </div>
-            
-
-            
-
-        </div>
-
-        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <p>glibc提供了两种信号量。POSIX信号量和SystemV信号量。</p>
-<p>SystemV信号量是在内核里的，向用户暴露为信号量的集合。</p>
-<p>控制信号量的三个函数都是系统调用。semget, semctl, semop。</p>
-
-        </div>
-
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-<nav class="article-nav">
-  
-    <a href="/2021/12/12/%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8Fcyclictest%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          测试程序cyclictest的源码分析
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/11/28/%E7%AE%A1%E7%AA%A5C%E6%A0%87%E5%87%86%E5%BA%93/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-caption">上一篇</div>
-      <div class="article-nav-title">管窥C标准库</div>
-    </a>
-  
-</nav>
-
-
-    <section class="share">
-        <div class="share-title">分享</div>
-        <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=SystemV信号量的解析 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2021%2F12%2F04%2FSystemV%25E4%25BF%25A1%25E5%258F%25B7%25E9%2587%258F%25E7%259A%2584%25E8%25A7%25A3%25E6%259E%2590%2F">
-            <ion-icon name="logo-twitter"></ion-icon>
-        </a>
-        <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=SystemV信号量的解析 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2021%2F12%2F04%2FSystemV%25E4%25BF%25A1%25E5%258F%25B7%25E9%2587%258F%25E7%259A%2584%25E8%25A7%25A3%25E6%259E%2590%2F">
-            <ion-icon name="logo-facebook"></ion-icon>
-        </a>
-        <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=SystemV信号量的解析 - 逆流&url=https://shzhxh.github.io/2021/12/04/SystemV%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%90/&pic=">
-            <div class="n-icon n-icon-weibo"></div>
-        </a> -->
-    </section>
 
 </article>
 
 
+    </div></section>
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-</div>
                 </section>
             </section>
 
@@ -268,12 +141,6 @@
 <div class="widget" id="widget">
     
       
-  <div class="widget-wrap">
-    <div class="widget-inner">
-      <div class="toc post-toc-html"></div>
-    </div>
-  </div>
-
     
       
   <div class="widget-wrap widget-cate">
