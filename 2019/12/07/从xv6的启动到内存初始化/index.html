@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clkrqfr7v001neaofh4vwfdxl" class="article article-type-post" itemscope
+    <article id="post-clldb9kss001neln2cku8gh9p" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -220,7 +220,22 @@
 <li>kvminit是为各硬件和内核的物理内存创建到虚拟内存的映射。首先，为空闲页表kernel_pagetable分配一个空闲页；然后，为硬件uart、virtio硬盘、clint和plic建立映射；然后，为内核的代码段和数据段建立映射；最后，为管理内核&#x2F;用户空间切换的代码空间建立映射。</li>
 <li>kvminithart用于开启分页。使用w_satp函数向satp寄存器写入内核页表kernel_pagetable，它采用的是Sv39的分页方式。但这时分页机制并没有真正生效，需要执行sfence_vma函数来刷新TLB使它生效。</li>
 </ul>
-
+<script src="https://giscus.app/client.js"
+        data-repo="shzhxh/shzhxh.github.io"
+        data-repo-id="R_kgDOI4VSzw"
+        data-category="General"
+        data-category-id="DIC_kwDOI4VSz84CYojP"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
         </div>
 
     </div>

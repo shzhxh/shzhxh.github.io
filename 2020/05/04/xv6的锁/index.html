@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clkrqfr7r001aeaofg4280qzk" class="article article-type-post" itemscope
+    <article id="post-clldb9ksn001aeln27e97dot5" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -194,7 +194,22 @@
 <p>当自旋锁之间存在次序的关系时，所有的代码都必须遵循同样的次序来持有和释放锁。</p>
 <p>当在线程里使用锁的时候，如果发生中断，中断代码如请求同样的锁会发生死锁。所以，在请求锁的时候要禁止中断，在释放锁的时候再恢复中断。这就是<code>push_off</code>和<code>pop_off</code>做的事。</p>
 <p>编译器有的时候不按代码的次序安排指令，这对于锁来说是有害的，所以需要<code>__sync_synchronize</code>来建立内存屏障，使load和store指令不要跨屏障使用。</p>
-
+<script src="https://giscus.app/client.js"
+        data-repo="shzhxh/shzhxh.github.io"
+        data-repo-id="R_kgDOI4VSzw"
+        data-category="General"
+        data-category-id="DIC_kwDOI4VSz84CYojP"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
         </div>
 
     </div>

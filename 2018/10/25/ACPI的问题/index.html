@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clkrqfr790007eaofcykhdd2r" class="article article-type-post" itemscope
+    <article id="post-clldb9ks00007eln28l375a89" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -189,7 +189,22 @@
 
 <p>在安装arch linux的时候曾经碰到，在编辑文本的时候会自动输入字符的情况。在ubuntu下切换到其它控制台的时候，也会碰到从当前光标自动输入字符的情况。碰到最严重的问题是系统都无法安装，总是会自动重启。所有这些问题都有相同的解决方法，就是在启动的时候向内核传入参数<code>acpi=no</code>，意思是关闭acpi的功能。</p>
 <p>然而关闭acpi也有缺陷，系统的某些功能不能用了。比如点击关机选项只会停留在<code>system halted</code>阶段，还需要手动按下电源键关机。比如连接上第二个显示器没有反应。想使用第二个外接显示器怎么办呢？就是删除<code>acpi=no</code>参数。这样第二显示器可以显示了，而且以前出现的问题也消失了，即系统可以正常启动或关机了。我想这个问题可能的原因是，以前外接显示器时acpi的配置依然保存着，当没有外接显示器的时候acpi配置不正确导致不能进入桌面，关闭acpi可以进入桌面了但同时也不能连接第二个显示器了，当连接了第二个显示器同时又打开acpi的时候系统里保存的配置正确了，又能正常启动了。</p>
-
+<script src="https://giscus.app/client.js"
+        data-repo="shzhxh/shzhxh.github.io"
+        data-repo-id="R_kgDOI4VSzw"
+        data-category="General"
+        data-category-id="DIC_kwDOI4VSz84CYojP"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
         </div>
 
     </div>
