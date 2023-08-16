@@ -103,3 +103,16 @@ theme: aomori
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+# Comment
+aomori_giscus:
+  enable: true
+  repo: 'shzhxh/shzhxh.github.io'
+  repoId: 'R_kgDOI4VSzw'
+  category: 'General'
+  categoryId: DIC_kwDOI4VSz84CYojP
+  mapping: "title"
+  reactionsEnabled: 1
+  emitMetadata: 0
+  theme: 'light'
+  lang: 'zh-CN'
