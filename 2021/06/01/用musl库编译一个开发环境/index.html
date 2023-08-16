@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clldb9kt50028eln2gx98dguc" class="article article-type-post" itemscope
+    <article id="post-clldenwar0025ehoxauh4921n" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -201,22 +201,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载源码，二选一</span></span><br><span class="line">git <span class="built_in">clone</span> https://salsa.debian.org/ahs3/lmbench	<span class="comment"># 推荐，在debian下编译很整洁，没有提示异常</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/intel/lmbench.git	<span class="comment"># 编译时会提示一些异常，但可用</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如直接运行，会提示脚本scripts/gnu-os &quot;unable to guess system type&quot;，进而运行失败，故需替换这个脚本</span></span><br><span class="line"><span class="built_in">cd</span> lmbench/scripts</span><br><span class="line">wget <span class="string">&#x27;http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD&#x27;</span> -O config.guess</span><br><span class="line">wget <span class="string">&#x27;http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD&#x27;</span> -O config.sub</span><br><span class="line"><span class="built_in">mv</span> gnu-os gnu-os.bak	<span class="comment"># 保留旧脚本</span></span><br><span class="line"><span class="built_in">mv</span> config.guess gnu-os	<span class="comment"># 用新脚本替换旧脚本</span></span><br><span class="line"><span class="built_in">chmod</span> +x gnu-os			<span class="comment"># 给新脚本增加可执行权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行lmbench</span></span><br><span class="line"><span class="built_in">cd</span> lmbench</span><br><span class="line">make results	<span class="comment"># 编译并执行</span></span><br><span class="line">make see		<span class="comment"># 查看结果</span></span><br></pre></td></tr></table></figure>
 
 
-<script src="https://giscus.app/client.js"
-        data-repo="shzhxh/shzhxh.github.io"
-        data-repo-id="R_kgDOI4VSzw"
-        data-category="General"
-        data-category-id="DIC_kwDOI4VSz84CYojP"
-        data-mapping="title"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="zh-CN"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
         </div>
 
     </div>
@@ -282,6 +266,23 @@
 
 
 
+
+<section class="comments">
+    <div class="giscus"></div>
+</section>
+<script src="https://giscus.app/client.js"
+    data-repo="shzhxh/shzhxh.github.io"
+    data-repo-id="R_kgDOI4VSzw"
+    data-category="General"
+    data-category-id="DIC_kwDOI4VSz84CYojP"
+    data-mapping="title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+</script>
 
 
 

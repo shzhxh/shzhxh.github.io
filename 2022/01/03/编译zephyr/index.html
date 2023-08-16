@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clldb9kta002jeln22rzp871o" class="article article-type-post" itemscope
+    <article id="post-clldenwaw002hehox1e3zaoom" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -185,22 +185,6 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 添加kitware APT仓库</span></span><br><span class="line">wget https://apt.kitware.com/kitware-archive.sh</span><br><span class="line">sudo bash kitware-archive.sh</span><br><span class="line"><span class="comment"># 2. 安装依赖</span></span><br><span class="line">sudo apt install --no-install-recommends git cmake ninja-build gperf \</span><br><span class="line">  ccache dfu-util device-tree-compiler wget \</span><br><span class="line">  python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file \</span><br><span class="line">  make gcc gcc-multilib g++-multilib libsdl2-dev</span><br><span class="line"><span class="comment"># 3. 下载zephyr</span></span><br><span class="line">pip3 install --user -U west</span><br><span class="line">west init zephyrproject</span><br><span class="line"><span class="built_in">cd</span> zephyrproject</span><br><span class="line">west update</span><br><span class="line">west zephyr-export</span><br><span class="line">pip3 install --user -r ./zephyr/scripts/requirements.txt</span><br><span class="line"><span class="comment"># 4. 安装工具链</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.13.2/zephyr-sdk-0.13.2-linux-x86_64-setup.run</span><br><span class="line"><span class="built_in">chmod</span> +x zephyr-sdk-0.13.2-linux-x86_64-setup.run</span><br><span class="line">./zephyr-sdk-0.13.2-linux-x86_64-setup.run -- -d ~/zephyr-sdk-0.13.2y</span><br><span class="line">sudo <span class="built_in">cp</span> sysroots/x86_64-pokysdk-linux/usr/share/openocd/contrib/60-openocd.rules /etc/udev/rules.d</span><br><span class="line">sudo udevadm control --reload</span><br><span class="line"><span class="comment"># 5. </span></span><br><span class="line"><span class="built_in">cd</span> ~/zephyrproject/zephyr</span><br><span class="line">west build -b qemu-riscv64 samples/synchronization</span><br><span class="line">west build -t run</span><br></pre></td></tr></table></figure>
 
-<script src="https://giscus.app/client.js"
-        data-repo="shzhxh/shzhxh.github.io"
-        data-repo-id="R_kgDOI4VSzw"
-        data-category="General"
-        data-category-id="DIC_kwDOI4VSz84CYojP"
-        data-mapping="title"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="zh-CN"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
         </div>
 
     </div>
@@ -266,6 +250,23 @@
 
 
 
+
+<section class="comments">
+    <div class="giscus"></div>
+</section>
+<script src="https://giscus.app/client.js"
+    data-repo="shzhxh/shzhxh.github.io"
+    data-repo-id="R_kgDOI4VSzw"
+    data-category="General"
+    data-category-id="DIC_kwDOI4VSz84CYojP"
+    data-mapping="title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+</script>
 
 
 

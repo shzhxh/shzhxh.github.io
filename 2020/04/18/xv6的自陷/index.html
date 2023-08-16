@@ -138,7 +138,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clldb9ksm0018eln29ytccsd5" class="article article-type-post" itemscope
+    <article id="post-clldenwae0018ehox73tx02pt" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -212,23 +212,8 @@
 <h4 id="计时器中断"><a href="#计时器中断" class="headerlink" title="计时器中断"></a>计时器中断</h4><p>运行于机器模式下的<code>timerinit</code>初始化了计时器中断。由于virtio机器的时钟频率是10MHz，所以<code>interval</code>设置为1M的意思就是每100ms产生一个计时器中断。<code>scratch[]</code>区域用来给<code>timervec</code>提供保存和恢复上下文的空间。<code>timervec</code>被保存在<code>mtvec</code>里，它的工作是处理计时器中断。<code>timervec</code>产生了一个管理员模式下的软件中断，这样就可以通过管理员模式下的自陷处理机制来管理计时器中断了。</p>
 <h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/mit-pdos/xv6-riscv-book">xv6-riscv-book Chapter 4</a></li>
-<li>riscv-privileged-v1.10<script src="https://giscus.app/client.js"
-      data-repo="shzhxh/shzhxh.github.io"
-      data-repo-id="R_kgDOI4VSzw"
-      data-category="General"
-      data-category-id="DIC_kwDOI4VSz84CYojP"
-      data-mapping="title"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="top"
-      data-theme="light"
-      data-lang="zh-CN"
-      data-loading="lazy"
-      crossorigin="anonymous"
-      async></li>
+<li>riscv-privileged-v1.10</li>
 </ul>
-<p></script></p>
 
         </div>
 
@@ -295,6 +280,23 @@
 
 
 
+
+<section class="comments">
+    <div class="giscus"></div>
+</section>
+<script src="https://giscus.app/client.js"
+    data-repo="shzhxh/shzhxh.github.io"
+    data-repo-id="R_kgDOI4VSzw"
+    data-category="General"
+    data-category-id="DIC_kwDOI4VSz84CYojP"
+    data-mapping="title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+</script>
 
 
 
