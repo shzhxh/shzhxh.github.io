@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>fat32文件系统的磁盘布局 | 逆流</title>
+
+    <meta name="description" content="&lt;p&gt;FAT文件系统把存储介质看成是由簇(cluster)组成的数组。&lt;/p&gt;
+&lt;p&gt;注：&lt;strong&gt;簇&lt;/strong&gt;是FAT和NTFS文件系统里的最小单位。&lt;strong&gt;块&lt;/strong&gt;是EXT2和EXT3文件系统里的最小单位。&lt;strong&gt;扇区&lt;/strong&gt;是磁盘里的最小单位。&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "fat32文件系统的磁盘布局 | 逆流"  />
+    <meta property="og:description" content= "&lt;p&gt;FAT文件系统把存储介质看成是由簇(cluster)组成的数组。&lt;/p&gt;
+&lt;p&gt;注：&lt;strong&gt;簇&lt;/strong&gt;是FAT和NTFS文件系统里的最小单位。&lt;strong&gt;块&lt;/strong&gt;是EXT2和EXT3文件系统里的最小单位。&lt;strong&gt;扇区&lt;/strong&gt;是磁盘里的最小单位。&lt;/p&gt;" />
+    <meta property="og:url" content="https://shzhxh.github.io/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;FAT文件系统把存储介质看成是由簇(cluster)组成的数组。&lt;/p&gt;
+&lt;p&gt;注：&lt;strong&gt;簇&lt;/strong&gt;是FAT和NTFS文件系统里的最小单位。&lt;strong&gt;块&lt;/strong&gt;是EXT2和EXT3文件系统里的最小单位。&lt;strong&gt;扇区&lt;/strong&gt;是磁盘里的最小单位。&lt;/p&gt;" />
+    <meta name="twitter:title" content="fat32文件系统的磁盘布局 | 逆流"/>
+    <meta name="twitter:description" content="&lt;p&gt;FAT文件系统把存储介质看成是由簇(cluster)组成的数组。&lt;/p&gt;
+&lt;p&gt;注：&lt;strong&gt;簇&lt;/strong&gt;是FAT和NTFS文件系统里的最小单位。&lt;strong&gt;块&lt;/strong&gt;是EXT2和EXT3文件系统里的最小单位。&lt;strong&gt;扇区&lt;/strong&gt;是磁盘里的最小单位。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;FAT文件系统把存储介质看成是由簇(cluster)组成的数组。&lt;/p&gt;
+&lt;p&gt;注：&lt;strong&gt;簇&lt;/strong&gt;是FAT和NTFS文件系统里的最小单位。&lt;strong&gt;块&lt;/strong&gt;是EXT2和EXT3文件系统里的最小单位。&lt;strong&gt;扇区&lt;/strong&gt;是磁盘里的最小单位。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "fat32文件系统的磁盘布局 | 逆流",
+            "datePublished": "2023-09-05T10:47:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clm5qgayl000uhsq871cq2vpp" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      fat32文件系统的磁盘布局
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-09-05T10:47:00.000Z" itemprop="datePublished">2023-09-05</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/OS/">OS</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>FAT文件系统把存储介质看成是由簇(cluster)组成的数组。</p>
+<p>注：<strong>簇</strong>是FAT和NTFS文件系统里的最小单位。<strong>块</strong>是EXT2和EXT3文件系统里的最小单位。<strong>扇区</strong>是磁盘里的最小单位。</p>
+<span id="more"></span>
+
+<h4 id="fat32的整体结构"><a href="#fat32的整体结构" class="headerlink" title="fat32的整体结构"></a>fat32的整体结构</h4><p>FAT文件系统&#x3D;保留扇区 + 文件分配表 + 目录和数据区</p>
+<h4 id="保留扇区"><a href="#保留扇区" class="headerlink" title="保留扇区"></a>保留扇区</h4><h5 id="引导记录"><a href="#引导记录" class="headerlink" title="引导记录"></a>引导记录</h5><p>引导记录大小是1个扇区，位置是所在分区的0号扇区。</p>
+<p>引导记录&#x3D;BIOS参数块(0x00-0x23) + 扩展引导记录(0x24-0x1ff)</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) <span class="keyword">struct</span> <span class="title class_">BootSector</span> &#123;</span><br><span class="line">    bootjmp: [<span class="type">u8</span>; <span class="number">3</span>],		<span class="comment">// offset:0x00，跳转指令，用于跳过数据区，即：BiosParameterBlock</span></span><br><span class="line">    oem_name: [<span class="type">u8</span>; <span class="number">8</span>],		<span class="comment">// offset:0x03</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) bpb: BiosParameterBlock,	<span class="comment">// 数据部分</span></span><br><span class="line">    boot_code: [<span class="type">u8</span>; <span class="number">448</span>],	<span class="comment">// offset:0x5a</span></span><br><span class="line">    boot_sig: [<span class="type">u8</span>; <span class="number">2</span>],		<span class="comment">// offset:0x1fe, 启动分区的签名&quot;0xAA55&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) <span class="keyword">struct</span> <span class="title class_">BiosParameterBlock</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) bytes_per_sector: <span class="type">u16</span>,	<span class="comment">// offset:0x0b，扇区的大小</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) sectors_per_cluster: <span class="type">u8</span>,	<span class="comment">// offset:0x0d，簇的大小</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) reserved_sectors: <span class="type">u16</span>,	<span class="comment">// offset:0x0e，保留的扇区个数(保留扇区包含了boot record sectors)</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) fats: <span class="type">u8</span>,	<span class="comment">// offset:0x10, 文件分配表的个数，一般是2</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) root_entries: <span class="type">u16</span>,		<span class="comment">// offset:0x11, 根目录包含多少个条目</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) total_sectors_16: <span class="type">u16</span>,	<span class="comment">// offset:0x13，当前分区包含的扇区个数。为0表示超过了65535,则扇区个数记录在0x20处</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) media: <span class="type">u8</span>,				<span class="comment">// offset:0x15，介质的类型</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) sectors_per_fat_16: <span class="type">u16</span>,	<span class="comment">// offset:0x16，每个FAT占用的扇区数。仅用于FAT12/FAT16</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) sectors_per_track: <span class="type">u16</span>,	<span class="comment">// offset:0x18，每个磁道包含的扇区数。</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) heads: <span class="type">u16</span>,				<span class="comment">// offset:0x1a，磁头的数量</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) hidden_sectors: <span class="type">u32</span>,		<span class="comment">// offset:0x1c，隐藏扇区的数量</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) total_sectors_32: <span class="type">u32</span>,	<span class="comment">// offset:0x20，当前分区包含的扇区个数。当0x13记录不下，用当前字段来记录</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Extended BIOS Parameter Block</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) sectors_per_fat_32: <span class="type">u32</span>,	<span class="comment">// offset:0x24，分区表的大小</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) extended_flags: <span class="type">u16</span>,		<span class="comment">// offset:0x28，标志(flags)</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) fs_version: <span class="type">u16</span>,			<span class="comment">// offset:0x2a，FAT版本号</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) root_dir_first_cluster: <span class="type">u32</span>,	<span class="comment">// offset:0x2c, 根目录的簇号，一般设置为2</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) fs_info_sector: <span class="type">u16</span>,		<span class="comment">// offset:0x30, FSInfo的扇区号</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) backup_boot_sector: <span class="type">u16</span>,	<span class="comment">// offset:0x32，boot sector备份的扇区号</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) reserved_0: [<span class="type">u8</span>; <span class="number">12</span>],	<span class="comment">// offset:0x34</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) drive_num: <span class="type">u8</span>,			<span class="comment">// offset:0x40，驱动器编号。等于BIOS执行完后DL寄存器的内容。比如，0x80代表硬盘。</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) reserved_1: <span class="type">u8</span>,			<span class="comment">// offset:0x41</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) ext_sig: <span class="type">u8</span>,				<span class="comment">// offset:0x42, 签名。只能是0x28或0x29</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) volume_id: <span class="type">u32</span>,			<span class="comment">// offset:0x43，卷ID的序列号。可忽略。</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) volume_label: [<span class="type">u8</span>; <span class="number">11</span>],	<span class="comment">// offset:0x47</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) fs_type_label: [<span class="type">u8</span>; <span class="number">8</span>],	<span class="comment">// offset:0x52, 总是&quot;FAT32&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="FSInfo扇区"><a href="#FSInfo扇区" class="headerlink" title="FSInfo扇区"></a>FSInfo扇区</h5><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FSInfo结构体占用512字节，扇区号在扩展引导记录里指定。</span></span><br><span class="line"><span class="comment">// 注：offset:0x4~0x1e3, 0x1f0~0x1fb是保留空间</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FsInfoSector</span> &#123;</span><br><span class="line">    free_cluster_count: <span class="type">Option</span>&lt;<span class="type">u32</span>&gt;,	<span class="comment">// offset:0x1e8，卷上空闲簇的数量。如为0xFFFF_FFFF,则空闲簇数量未知，必须计算求得。</span></span><br><span class="line">    next_free_cluster: <span class="type">Option</span>&lt;<span class="type">u32</span>&gt;,		<span class="comment">// offset:0x1ec，应该从哪个簇号开始查找空闲簇。</span></span><br><span class="line">    dirty: <span class="type">bool</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">FsInfoSector</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> LEAD_SIG: <span class="type">u32</span> = <span class="number">0x4161_5252</span>;	<span class="comment">// 先导签名的值，offset:0x0</span></span><br><span class="line">    <span class="keyword">const</span> STRUC_SIG: <span class="type">u32</span> = <span class="number">0x6141_7272</span>;	<span class="comment">// 中间签名的值，offset:0x1e4</span></span><br><span class="line">    <span class="keyword">const</span> TRAIL_SIG: <span class="type">u32</span> = <span class="number">0xAA55_0000</span>;	<span class="comment">// 结尾签名的值，offset:0x1fc</span></span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="文件分配表"><a href="#文件分配表" class="headerlink" title="文件分配表"></a>文件分配表</h4><p>文件分配表里的一个表项就是一个32位的簇地址，表项的数量就是当前分区里的簇数量。</p>
+<p>FAT32使用32位地址来给簇编号，但高4位被保留了，只有低28位是有效的。</p>
+<ul>
+<li>0号表项是被保留的。其值必须是<code>0xf8ff_ff0f</code>。</li>
+<li>1号表项是被保留的，留做将来使用。其值必须是<code>0xffff_ffff</code>或<code>0xffff_ff0f</code>。</li>
+<li>目录和数据区是从<strong>2</strong>开始编号的。</li>
+</ul>
+<p>文件分配表里元素值的含义：</p>
+<ul>
+<li>大于等于<code>0x0fff_fff8</code>，代表没有多余的簇了，即整个文件已读取完成。</li>
+<li>等于<code>0x0fff_fff7</code>，代表这个簇是坏的。</li>
+<li>等于<code>0</code>，代表这个簇是空闲的。</li>
+<li>等于<code>1</code>，没有意义。</li>
+<li>其它值，代表了当前文件下一个簇的簇号。</li>
+</ul>
+<h4 id="目录和数据区"><a href="#目录和数据区" class="headerlink" title="目录和数据区"></a>目录和数据区</h4><h5 id="根目录"><a href="#根目录" class="headerlink" title="根目录"></a>根目录</h5><p>根目录在目录和数据区的第0号簇上，记录了整个磁盘的结构。是由目录条目组成的数组，数组元素为32字节大小。</p>
+<h5 id="目录和文件的条目"><a href="#目录和文件的条目" class="headerlink" title="目录和文件的条目"></a>目录和文件的条目</h5><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 标准8.3格式。大小32字节。</span></span><br><span class="line"><span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) <span class="keyword">struct</span> <span class="title class_">DirFileEntryData</span> &#123;</span><br><span class="line">    name: [<span class="type">u8</span>; SFN_SIZE],	<span class="comment">// offset:0, SFN_SIZE值为11。前8名字，后3后缀。</span></span><br><span class="line">    attrs: FileAttributes,	<span class="comment">// offset:11, u8类型。文件属性，可以决定当前条目是目录还是文件。</span></span><br><span class="line">    reserved_0: <span class="type">u8</span>,			<span class="comment">// offset:12</span></span><br><span class="line">    create_time_0: <span class="type">u8</span>,		<span class="comment">// offset:13，创建时间，以0.1秒为单位。</span></span><br><span class="line">    create_time_1: <span class="type">u16</span>,		<span class="comment">// offset:14，创建时间，前5小时，中6分钟，后5秒。注：秒要乘2.</span></span><br><span class="line">    create_date: <span class="type">u16</span>,		<span class="comment">// offset:16，创建日期。前7年，中4月，后5日。</span></span><br><span class="line">    access_date: <span class="type">u16</span>,		<span class="comment">// offset:18，最后访问日期。前7年，中4月，后5日。</span></span><br><span class="line">    first_cluster_hi: <span class="type">u16</span>,	<span class="comment">// offset:20, 当前文件第一个簇的簇号的高16位。</span></span><br><span class="line">    modify_time: <span class="type">u16</span>,		<span class="comment">// offset:22，最后修改时间。前5小时，中6分钟，后5秒。注：秒要乘2.</span></span><br><span class="line">    modify_date: <span class="type">u16</span>,		<span class="comment">// offset:24，最后修改日期。前7年，中4月，后5日。</span></span><br><span class="line">    first_cluster_lo: <span class="type">u16</span>,	<span class="comment">// offset:26, 当前文件第一个簇的簇号的低16位。</span></span><br><span class="line">    size: <span class="type">u32</span>,				<span class="comment">// offset:28, 当前文件占用了多少字节。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 长文件名条目。大小32字节。位置是在标准8.3格式的前面。</span></span><br><span class="line"><span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) <span class="keyword">struct</span> <span class="title class_">DirLfnEntryData</span> &#123;</span><br><span class="line">    order: <span class="type">u8</span>,			<span class="comment">// offset:0，当前条目在长文件名条目序列里的次序。这样就可以知道当前条目的字符在文件名中的位置。</span></span><br><span class="line">    name_0: [<span class="type">u16</span>; <span class="number">5</span>],	<span class="comment">// offset:1，前5个双字节字符。</span></span><br><span class="line">    attrs: FileAttributes,	<span class="comment">// offset:11，文件属性，固定为0x0F。</span></span><br><span class="line">    entry_type: <span class="type">u8</span>,		<span class="comment">// offset:12。条目类型。0代表名字条目。</span></span><br><span class="line">    checksum: <span class="type">u8</span>,		<span class="comment">// offset:13。创建文件时对短文件名生成的检验和。</span></span><br><span class="line">    name_1: [<span class="type">u16</span>; <span class="number">6</span>],	<span class="comment">// offset:14。接下来6个双字节字符。</span></span><br><span class="line">    reserved_0: <span class="type">u16</span>,	<span class="comment">// osffset:26。保留字段，总是设置为0.</span></span><br><span class="line">    name_2: [<span class="type">u16</span>; <span class="number">2</span>],	<span class="comment">// offset:28。最后2个双字节字符。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">bitflags!</span> &#123;</span><br><span class="line">    <span class="comment">/// A FAT file attributes.</span></span><br><span class="line">    <span class="meta">#[derive(Default)]</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">FileAttributes</span>: <span class="type">u8</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> READ_ONLY  = <span class="number">0x01</span>;</span><br><span class="line">        <span class="keyword">const</span> HIDDEN     = <span class="number">0x02</span>;</span><br><span class="line">        <span class="keyword">const</span> SYSTEM     = <span class="number">0x04</span>;</span><br><span class="line">        <span class="keyword">const</span> VOLUME_ID  = <span class="number">0x08</span>;</span><br><span class="line">        <span class="keyword">const</span> DIRECTORY  = <span class="number">0x10</span>;	<span class="comment">// 目录</span></span><br><span class="line">        <span class="keyword">const</span> ARCHIVE    = <span class="number">0x20</span>;	<span class="comment">// 普通文件</span></span><br><span class="line">        <span class="comment">// LFN：值为0x0F，表示当前条目是长文件名条目</span></span><br><span class="line">        <span class="keyword">const</span> LFN        = <span class="keyword">Self</span>::READ_ONLY.bits | <span class="keyword">Self</span>::HIDDEN.bits</span><br><span class="line">                         | <span class="keyword">Self</span>::SYSTEM.bits | <span class="keyword">Self</span>::VOLUME_ID.bits;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://wiki.osdev.org/FAT">osdev.org&#x2F;fat</a></li>
+<li><a target="_blank" rel="noopener" href="https://crates.io/crates/fatfs">crates.io&#x2F;fatfs</a></li>
+<li>《操作系统的设计与实现 - 5.3.2实现文件》</li>
+</ul>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2023/09/02/ext2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">ext2文件系统的磁盘布局</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=fat32文件系统的磁盘布局 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2023%2F09%2F05%2Ffat32%25E6%2596%2587%25E4%25BB%25B6%25E7%25B3%25BB%25E7%25BB%259F%25E7%259A%2584%25E7%25A3%2581%25E7%259B%2598%25E5%25B8%2583%25E5%25B1%2580%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=fat32文件系统的磁盘布局 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2023%2F09%2F05%2Ffat32%25E6%2596%2587%25E4%25BB%25B6%25E7%25B3%25BB%25E7%25BB%259F%25E7%259A%2584%25E7%25A3%2581%25E7%259B%2598%25E5%25B8%2583%25E5%25B1%2580%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=fat32文件系统的磁盘布局 - 逆流&url=https://shzhxh.github.io/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="comments">
+    <div class="giscus"></div>
+</section>
+<script src="https://giscus.app/client.js"
+    data-repo="shzhxh/shzhxh.github.io"
+    data-repo-id="R_kgDOI4VSzw"
+    data-category="General"
+    data-category-id="DIC_kwDOI4VSz84CYojP"
+    data-mapping="title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+</script>
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Command/">Command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hardware/">Hardware</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Other/">Other</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACPI/" rel="tag">ACPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/" rel="tag">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/" rel="tag">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/">fat32文件系统的磁盘布局</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/02/ext2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/">ext2文件系统的磁盘布局</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/01/%E4%BA%BA%E7%94%9F%E5%AE%88%E5%88%99/">人生守则</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/%E5%BF%83%E6%99%BA%E7%9A%84%E8%8D%A3%E8%80%80/">为了人类心智的荣耀</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/06/%E7%BC%96%E8%AF%91Linux%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AFRust%E6%94%AF%E6%8C%81/">编译Linux内核开启Rust支持</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
