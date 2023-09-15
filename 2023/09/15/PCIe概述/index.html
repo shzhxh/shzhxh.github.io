@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>PCIe概述 | 逆流</title>
+
+    <meta name="description" content="&lt;p&gt;PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="en" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "PCIe概述 | 逆流"  />
+    <meta property="og:description" content= "&lt;p&gt;PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。&lt;/p&gt;" />
+    <meta property="og:url" content="https://shzhxh.github.io/2023/09/15/PCIe%E6%A6%82%E8%BF%B0/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="shzhxh" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。&lt;/p&gt;" />
+    <meta name="twitter:title" content="PCIe概述 | 逆流"/>
+    <meta name="twitter:description" content="&lt;p&gt;PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "shzhxh" },
+            "@type": "BlogPosting",
+            "url": "https://shzhxh.github.io/2023/09/15/PCIe%E6%A6%82%E8%BF%B0/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://shzhxh.github.ioundefined"
+            },
+            "name": "shzhxh"
+            },
+            "headline": "PCIe概述 | 逆流",
+            "datePublished": "2023-09-15T09:49:06.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://shzhxh.github.io/2023/09/15/PCIe%E6%A6%82%E8%BF%B0/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">逆流</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clmjy8yb2000jeyoz4r8x3u80" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      PCIe概述
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-09-15T09:49:06.000Z" itemprop="datePublished">2023-09-15</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/Hardware/">Hardware</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>PCI(外围组件互连)和PCIe最大的区别是传输方式：PCI是并行传输，而PCIe是串行传输。因为串行传输可以将传输频率大幅提升，从而提升了传输速度。</p>
+<span id="more"></span>
+
+<h4 id="PCI架构"><a href="#PCI架构" class="headerlink" title="PCI架构"></a>PCI架构</h4><p>PCI总线主要由三部分组成：</p>
+<ol>
+<li>PCI设备。分为主设备和目标设备，主设备是访问的发起者，目标设备是被访问者。</li>
+<li>PCI总线。系统中可以有多条PCI总线。每条PCI总线上可以连接多个PCI设备或PCI桥。</li>
+<li>PCI桥。PCI桥连接了两条PCI总线。</li>
+</ol>
+<p>PCI标准的特点：</p>
+<ol>
+<li>它是并行总线。一个时钟周期内传32个bit，地址信息32位，数据信息32位，所以传地址和信息需要2个时钟周期。</li>
+<li>处理器空间和PCI空间通过host桥隔离。host桥的存在，使处理器和PCI工作在各自的时钟频率，方便地共享内存资源。</li>
+<li>扩展性强。可以通过PCI总线桥扩展出一系列PCI总线，它们形成以root桥为根结点的一棵PCI总线树。</li>
+</ol>
+<h4 id="PCIe架构"><a href="#PCIe架构" class="headerlink" title="PCIe架构"></a>PCIe架构</h4><p>PCIe总线的组成：</p>
+<ol>
+<li>root port</li>
+<li>endpoint</li>
+<li>switch。可以同时连接多个endpoint。</li>
+<li>PCI总线。一个root port和一个endpoint之间就需要一个单独的PCI总线。</li>
+<li>lane。PCIe的连线。lane组合起来可以提供更高的带宽，最大直到x16。</li>
+</ol>
+<p>PCIe总线的特点：</p>
+<ol>
+<li>PCIe是点对点结构。</li>
+<li>配置空间为4K。(作为对比，PCI的配置空间只有256B)。</li>
+<li>提供了很多特殊功能。如CTO(Complete Timeout)，MaxPayload，电源管理State(L0&#x2F;L0s&#x2F;L1)等。</li>
+</ol>
+<h4 id="配置空间"><a href="#配置空间" class="headerlink" title="配置空间"></a>配置空间</h4><p>PCI总线上的设备完全是由软件驱动来初始化和配置的，这是通过各设备的配置空间(Configuration Address Space)来实现的。</p>
+<p>PCI设备必须提供配置空间，其大小最高可以有256比特。配置空间的前64个bit(0x00<del>0x3f)是PCI设备必须支持。0x40</del>0xff是扩展的配置空间。</p>
+<h5 id="通用的header字段"><a href="#通用的header字段" class="headerlink" title="通用的header字段"></a>通用的header字段</h5><p>配置空间里通用的header字段。</p>
+<ul>
+<li><p>device id：由供应商提供设备id。</p>
+</li>
+<li><p>vendor id：由PCI-SIG来分配供应商id。</p>
+</li>
+<li><p>status：一个寄存器，用于记录PCI总线相关事件的状态信息。</p>
+</li>
+<li><p>command：</p>
+</li>
+<li><p>class code：一个只读寄存器，定义了设备可以实现的功能的类型。</p>
+</li>
+<li><p>subclass：</p>
+</li>
+<li><p>prog IF：一个只读寄存器，定义了寄存器级的编程接口。</p>
+</li>
+<li><p>revision id：设备的修订标识符。由供应商提供。</p>
+</li>
+<li><p>BIST：built-in self test</p>
+</li>
+<li><p>header type：配置空间从0x10开始的非通用部分的类型。</p>
+<table>
+<thead>
+<tr>
+<th>head type</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>普通设备</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PCI-to-PCI桥</td>
+</tr>
+<tr>
+<td>2</td>
+<td>PCI-to-CardBus桥</td>
+</tr>
+<tr>
+<td>0x80</td>
+<td>此设备有多个功能</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>latency timer：在PCI总线的时钟集里指定latency timer。</p>
+</li>
+<li><p>cache line size：</p>
+</li>
+</ul>
+<h5 id="type0设备的配置空间"><a href="#type0设备的配置空间" class="headerlink" title="type0设备的配置空间"></a>type0设备的配置空间</h5><p>type0设备(非bridge设备)的配置空间：</p>
+<table>
+<thead>
+<tr>
+<th>寄存器(32bit)</th>
+<th>offset(字节)</th>
+<th>名字 (bit: bit)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0</td>
+<td>0x0</td>
+<td>Vendor id + device id (16 : 16)</td>
+</tr>
+<tr>
+<td>0x1</td>
+<td>0x4</td>
+<td>command + status (16 : 16)</td>
+</tr>
+<tr>
+<td>0x2</td>
+<td>0x8</td>
+<td>revision id + prog IF + subclass + class code (8: 8: 8: 8)</td>
+</tr>
+<tr>
+<td>0x3</td>
+<td>0xc</td>
+<td>cache line size + latency timer + header type + BIST (8 : 8 : 8: 8)</td>
+</tr>
+<tr>
+<td>0x4</td>
+<td>0x10</td>
+<td>BAR0 (base address register #0)</td>
+</tr>
+<tr>
+<td>0x5</td>
+<td>0x14</td>
+<td>BAR1</td>
+</tr>
+<tr>
+<td>0x6</td>
+<td>0x18</td>
+<td>BAR2</td>
+</tr>
+<tr>
+<td>0x7</td>
+<td>0x1c</td>
+<td>BAR3</td>
+</tr>
+<tr>
+<td>0x8</td>
+<td>0x20</td>
+<td>BAR4</td>
+</tr>
+<tr>
+<td>0x9</td>
+<td>0x24</td>
+<td>BAR5</td>
+</tr>
+<tr>
+<td>0xa</td>
+<td>0x28</td>
+<td>Cardubs CIS Pointer</td>
+</tr>
+<tr>
+<td>0xb</td>
+<td>0x2c</td>
+<td>subsystem vendor id + subsystem id (16: 16)</td>
+</tr>
+<tr>
+<td>0xc</td>
+<td>0x30</td>
+<td>XROMBAR(expansion ROM base address register)</td>
+</tr>
+<tr>
+<td>0xd</td>
+<td>0x34</td>
+<td>Capabilities pointer + 保留 (8: 24)</td>
+</tr>
+<tr>
+<td>0xe</td>
+<td>0x38</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>0xf</td>
+<td>0x3c</td>
+<td>Interrupt line + interrupt pin + min grant + max latency (8: 8: 8: 8)</td>
+</tr>
+</tbody></table>
+<h5 id="访问配置空间"><a href="#访问配置空间" class="headerlink" title="访问配置空间"></a>访问配置空间</h5><p>PCI设备的编码简称为BDF，即：Bus号 + Device号 + Function号。</p>
+<p>访问PCI设备的寄存器(只能访问256比特)：</p>
+<ul>
+<li><p>CFGADR(配置地址寄存器)，I&#x2F;O空间地址0xCF8，用于指定要访问的配置地址。</p>
+<table>
+<thead>
+<tr>
+<th>位</th>
+<th>名字</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>31</td>
+<td>配置使能</td>
+<td></td>
+</tr>
+<tr>
+<td>24~30</td>
+<td>保留</td>
+<td></td>
+</tr>
+<tr>
+<td>16~23</td>
+<td>Bus号</td>
+<td>选择哪个总线</td>
+</tr>
+<tr>
+<td>11~15</td>
+<td>Device号</td>
+<td>选择总线上的哪个设备</td>
+</tr>
+<tr>
+<td>8~10</td>
+<td>Function号</td>
+<td>选择设备的哪个功能（如果设备有多个功能）</td>
+</tr>
+<tr>
+<td>2~7</td>
+<td>寄存器编号</td>
+<td>指定配置空间上的寄存器（最多只可能有64个寄存器）</td>
+</tr>
+<tr>
+<td>0～1</td>
+<td>保留，恒为00</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>CFGDAT(配置数据寄存器)，I&#x2F;O空间地址0xCFC，用于读取或写入要传输的配置数据。</p>
+</li>
+</ul>
+<p>PCIe的配置空间有4KB，使用I&#x2F;O空间地址只能访问前255B，使用MMIO可以访问全部的配置空间，其地址记录在ACPI ‘MCFG’表。</p>
+<h4 id="BAR空间"><a href="#BAR空间" class="headerlink" title="BAR空间"></a>BAR空间</h4><p>BAR(base address register)，记录了设备所需要的内存地址。</p>
+<p>内存空间里BAR的布局：</p>
+<table>
+<thead>
+<tr>
+<th>bit 31-4</th>
+<th>bit 3</th>
+<th>bit 2-1</th>
+<th>bit 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>base address (16字节对齐)</td>
+<td>prefetchable</td>
+<td>type</td>
+<td>恒为0</td>
+</tr>
+</tbody></table>
+<p>I&#x2F;O空间上BAR的布局：</p>
+<table>
+<thead>
+<tr>
+<th>bit 31-2</th>
+<th>bit 1</th>
+<th>bit 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>base address (4字节对齐)</td>
+<td>保留</td>
+<td>恒为1</td>
+</tr>
+</tbody></table>
+<h4 id="PCI桥设备的配置空间"><a href="#PCI桥设备的配置空间" class="headerlink" title="PCI桥设备的配置空间"></a>PCI桥设备的配置空间</h4><p>PCI-to-PCI桥设备，即type 1设备，配置空间如下：</p>
+<table>
+<thead>
+<tr>
+<th>寄存器(32bit)</th>
+<th>offset(字节)</th>
+<th>名字 (bit: bit)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0</td>
+<td>0x0</td>
+<td>Vendor id + device id (16 : 16)</td>
+</tr>
+<tr>
+<td>0x1</td>
+<td>0x4</td>
+<td>connand + status (16 : 16)</td>
+</tr>
+<tr>
+<td>0x2</td>
+<td>0x8</td>
+<td>revision id + prog IF + subclass + class code (8: 8: 8: 8)</td>
+</tr>
+<tr>
+<td>0x3</td>
+<td>0xc</td>
+<td>cache line size + latency timer + header type + BIST (8 : 8 : 8: 8)</td>
+</tr>
+<tr>
+<td>0x4</td>
+<td>0x10</td>
+<td>BAR0 (base address register #0)</td>
+</tr>
+<tr>
+<td>0x5</td>
+<td>0x14</td>
+<td>BAR1</td>
+</tr>
+<tr>
+<td>0x6</td>
+<td>0x18</td>
+<td>主总线号+二级总线号+ subordinate总线号+ secondary latency timer (8: 8: 8: 8)</td>
+</tr>
+<tr>
+<td>0x7</td>
+<td>0x1c</td>
+<td>I&#x2F;O base + I&#x2F;O limit + secondary status (8: 8: 16)</td>
+</tr>
+<tr>
+<td>0x8</td>
+<td>0x20</td>
+<td>memory base + memory limit (16:16)</td>
+</tr>
+<tr>
+<td>0x9</td>
+<td>0x24</td>
+<td>prefetchable memory base + prefetchable memory limit (16: 16)</td>
+</tr>
+<tr>
+<td>0xa</td>
+<td>0x28</td>
+<td>prefetchable base upper 32 bits</td>
+</tr>
+<tr>
+<td>0xb</td>
+<td>0x2c</td>
+<td>prefetchable limit upper 32 bits</td>
+</tr>
+<tr>
+<td>0xc</td>
+<td>0x30</td>
+<td>I&#x2F;O base upper 16 bits + I&#x2F;O limit upper 16 bits (16: 16)</td>
+</tr>
+<tr>
+<td>0xd</td>
+<td>0x34</td>
+<td>capability pointer + 保留 (8: 24)</td>
+</tr>
+<tr>
+<td>0xe</td>
+<td>0x38</td>
+<td>XROMBAR(expansion ROM base address register)</td>
+</tr>
+<tr>
+<td>0xf</td>
+<td>0x3c</td>
+<td>Interrupt line + interrupt pin + bridge control (8: 8: 16)</td>
+</tr>
+</tbody></table>
+<h5 id="capabilities结构"><a href="#capabilities结构" class="headerlink" title="capabilities结构"></a>capabilities结构</h5><p>capabilities结构代表了PCIe设备的各种特性，如Max Payload, CTO等。capabilites的结构是：多个capability组成链表结构。</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26172972">深入PCI与PCIe之一：硬件篇</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26244141">深入PCI与PCIe之二：软件篇</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.osdev.org/PCI">osdev.org&#x2F;PCI</a></li>
+</ul>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2023/09/14/NVME%E6%A6%82%E8%BF%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">NVME概述</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=PCIe概述 - 逆流&url=https%3A%2F%2Fshzhxh.github.io%2F2023%2F09%2F15%2FPCIe%25E6%25A6%2582%25E8%25BF%25B0%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=PCIe概述 - 逆流&u=https%3A%2F%2Fshzhxh.github.io%2F2023%2F09%2F15%2FPCIe%25E6%25A6%2582%25E8%25BF%25B0%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=PCIe概述 - 逆流&url=https://shzhxh.github.io/2023/09/15/PCIe%E6%A6%82%E8%BF%B0/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="comments">
+    <div class="giscus"></div>
+</section>
+<script src="https://giscus.app/client.js"
+    data-repo="shzhxh/shzhxh.github.io"
+    data-repo-id="R_kgDOI4VSzw"
+    data-category="General"
+    data-category-id="DIC_kwDOI4VSz84CYojP"
+    data-mapping="title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+</script>
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Command/">Command</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hardware/">Hardware</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Other/">Other</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACPI/" rel="tag">ACPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/" rel="tag">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/" rel="tag">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/15/PCIe%E6%A6%82%E8%BF%B0/">PCIe概述</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/14/NVME%E6%A6%82%E8%BF%B0/">NVME概述</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/05/fat32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/">fat32文件系统的磁盘布局</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/02/ext2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A3%81%E7%9B%98%E5%B8%83%E5%B1%80/">ext2文件系统的磁盘布局</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/01/%E4%BA%BA%E7%94%9F%E5%AE%88%E5%88%99/">人生守则</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            逆流 &copy; 2023<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
